@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple HTML with Tailwind - Theme Toggle</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="./Global.css">
+</head>
+<body>
+  <!-- Theme Toggle Button -->
+  <label class="inline-flex items-center cursor-pointer fixed top-4 right-4 p-2 text-white rounded">
+    <input id="theme-toggle" type="checkbox" class="sr-only peer">
+    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+    <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Toggle me</span>
+  </label>
+
+  <header class="p-4">
+    <h1 class="text-3xl font-bold">Project Suit</h1>
+  </header>
+
+  <main class="p-6">
+    <h2 class="text-2xl">Welcome to my website</h2>
+    <p>This is a sample paragraph using the custom color theme.</p>
+    <button class="py-2 px-4 rounded">Learn More</button>
+  </main>
+
+  <footer class="p-4 text-center">
+    © 2024 My Website
+  </footer>
+
+
+</body>
+    <script src="./Theme.js"></script>
+</html>
