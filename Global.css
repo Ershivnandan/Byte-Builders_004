@@ -1,9 +1,12 @@
 /* Custom Colors for Light and Dark Themes */
 :root {
+
+   --primary-color-light: #1a202c; /* c Dark Blue */
+  --primary-color-light: #e1f4ff; 
   --primary-color-light: #1b2029; /* Dark Blue */
   --secondary-color-light: #4a5568; /* Grayish Blue */
   --accent-color-light: #3182ce; /* Bright Blue */
-  --background-color-light: #edf2f7; /* Light Background */
+ --background-color-light: #edf2f7;  /* Light Background */
   --text-color-light: #2d3748; /* Dark Text Color */
 
   --primary-color-dark: #2d3748; /* Light Blue */
@@ -14,6 +17,7 @@
 }
 
 /* Apply light theme by default */
+
 body {
   background-color: var(--background-color-light);
   color: var(--text-color-light);
@@ -46,7 +50,7 @@ button {
 /* Dark Theme Style */
 .dark-mode {
   background-color: var(--background-color-dark);
-  color: var(--text-color-dark);
+  /* color: var(--text-color-dark); */
 }
 
 .dark-mode header {
@@ -61,6 +65,7 @@ button {
   background-color: var(--accent-color-dark);
 }
 
+
 .dark-mode .dropdown{
   background-color: var(--primary-color-dark);
   color: white;
@@ -71,3 +76,4 @@ button {
 .dark-mode .border{
   border: 1px solid white !important;
 }
+

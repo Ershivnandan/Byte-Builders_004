@@ -3,38 +3,427 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simple HTML with Tailwind - Theme Toggle</title>
-
-    <!-- Tailwind CSS CDN -->
+    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <!-- bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="./Global.css" />
   </head>
-  <body>
-    <!-- Theme Toggle Button -->
-    <label
-      class="inline-flex items-center cursor-pointer fixed top-4 right-4 p-2 text-white rounded"
-    >
-      <input id="theme-toggle" type="checkbox" class="sr-only peer" />
-      <div
-        class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-      ></div>
-      <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-        >Toggle me</span
-      >
-    </label>
 
-    <header class="p-4">
-      <h1 class="text-3xl font-bold">Project Suit</h1>
+    <!-- Navbar -->
+    <header class="bg-white shadow-md fixed top-0 left-0 right-0 z-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <a href="" ><img class="w-16" src="https://i.ibb.co/8g5F6gR/logo.jpg" alt="logo"></a>
+          </div>
+  
+          <!-- Hamburger and Links -->
+          <div class="flex items-center space-x-4 ">
+            <!-- Desktop Links -->
+            <div class="hidden md:flex space-x-8">
+              <a href="#" class="text-gray-700 hover:text-gray-900">Home</a>
+              <a href="#about" class="text-gray-700 hover:text-gray-900">About</a>
+              <a href="#services" class="text-gray-700 hover:text-gray-900">Services</a>
+              <button class=""><a href="auth.html" class="text-gray-700 hover:text-gray-900">Sign Up</a></button>
+              <!-- <div class="mt-5"> -->
+                <!-- <label
+                  class=" mt-1 inline-flex items-center cursor-pointer text-white rounded"
+                >
+                  <input id="theme-toggle" type="checkbox" class="sr-only peer" />
+                  <div
+                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+                  ></div>
+                </label> -->
+              <!-- </div> -->
+            </div>
+  
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden flex items-center">
+              <button @click="open = !open" class="text-gray-700 focus:outline-none" aria-label="Toggle menu">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Mobile Menu (only visible when open) -->
+        <div x-data="{ open: false }" x-show="open" @click.away="open = false" class="md:hidden">
+          <div class="pt-4 pb-3 space-y-1">
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Home</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">About</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Services</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Contact</a>
+          </div>
+        </div>
+      </div>
     </header>
 
-    <main class="p-6">
-      <h2 class="text-2xl">Welcome to my website</h2>
-      <p>This is a sample paragraph using the custom color theme.</p>
-      <button class="py-2 px-4 rounded">Learn More</button>
-    </main>
+    <!-- Hero Section -->
+    <section class="text-center py-16 bg-blue-50 pt-55">
+      <br>
+      <br>
+      <div class="flex justify-around align-center mt-10 flex-wrap">
+        <div class="text-center ml-4 mr-4">
+          <h1 class="text-5xl font-bold  mb-4">
+            Maximize Your Efficiency with ProductivityPro
+          </h1>
+          <p class="mb-8">
+            Stay organized, focused, and achieve more with our powerful
+            productivity web app. Take control of your tasks, conquer your
+            goals.
+          </p>
+        </div>
+        <div class=" mr-10 relative">
+         
+          <img
+            class=""
+            src="https://i.ibb.co/zfD2nyp/Saas.jpg"
+            alt="image"
+          />
+          <!-- <div class="bg-blue-200 rounded-full p-12 absolute -top-10 left-10 w-full h-full mt-10"
+          ></div> -->
+        </div>
+      </div>
+    </section>
 
-    <footer class="p-4 text-center">© 2024 My Website</footer>
+    <!-- Features Section -->
+    <section class="py-16" id="about">
+      <h2 class="text-3xl text-center font-bold text-gray-800">
+        Features
+      </h2>
+      <div
+        class="max-w-5xl mx-auto mt-5 grid grid-cols-1 md:grid-cols-3 gap-8 text-center"
+      >
+      
+        <!-- Task Management -->
+        <div class="p-6 bg-white rounded-lg shadow-md ml-4 mr-4">
+          <div class="flex justify-center">
+            <div
+              class="w-12  h-12 bg-blue-100 rounded-full flex items-center justify-center "
+            >
+            <img src="https://i.ibb.co/cXzdVTQ/vector.png" alt="vector" border="0">
+                <path
+                  d="M10 4a1 1 0 01.117 1.993L10 6H8v2h6V6a1 1 0 01.993-.883L15 5a1 1 0 01.117 1.993L15 7h-2v8h2a1 1 0 01.993.883L17 16a1 1 0 01-.883.993L16 17H4a1 1 0 01-.993-.883L3 16v-2h2v2h10v-8H4a1 1 0 01-.117-1.993L4 8h2V6H4a1 1 0 01-.993-.883L3 5a1 1 0 01.883-.993L4 4h6z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">
+            Task Management
+          </h3>
+          <p class="text-gray-600">
+            Effortlessly organize and prioritize your tasks.
+          </p>
+        </div>
+
+        <!-- Time Tracking -->
+        <div class="p-6 bg-white rounded-lg shadow-md ml-4 mr-4">
+          <div class="flex justify-center mb-4">
+            <div
+              class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center"
+            >
+              <svg
+                class="w-6 h-6 text-green-600"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 2a8 8 0 110 16 8 8 0 010-16zm1 4a1 1 0 00-1 1v4H7a1 1 0 000 2h4a1 1 0 001-1V7a1 1 0 00-1-1z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">
+            Time Tracking
+          </h3>
+          <p class="text-gray-600">
+            Stay accountable with time tracking and insights.
+          </p>
+        </div>
+
+        <!-- Collaboration Tools -->
+        <div class="p-6 bg-white rounded-lg shadow-md ml-4 mr-4">
+          <div class="flex justify-center mb-4">
+            <div
+              class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center"
+            >
+            <img src="https://i.ibb.co/NSv341m/Icon-Box.png" alt="Icon-Box">
+            
+                <path
+                  d="M11 12a1 1 0 00-.117 1.993L11 14h2a1 1 0 00.993-.883L14 13v-1a5 5 0 10-10 0v1a1 1 0 00.883.993L5 14h2a1 1 0 00.993-.883L8 13v-1a3 3 0 116 0v1zM9 10a3 3 0 11-2.995 3.4L6 13v1h8v-1a3 3 0 01-2.995-3.4L11 10h-2z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">
+            Collaboration Tools
+          </h3>
+          <p class="text-gray-600">
+            Seamlessly collaborate and communicate with your team.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd -->
+
+    <hr>
+
+    <section class="py-16">
+      <div
+        class="max-w-7xl mx-auto px-4 md:px-8 lg:flex lg:items-center lg:justify-between"
+      >
+        <!-- Text Content -->
+        <div class="lg:w-1/2 space-y-4">
+          <h2 class="text-3xl font-bold text-gray-800">
+            Set and track your goals for success
+          </h2>
+          <p class="text-gray-600">
+            Setting and tracking goals is a structured approach to achieving success by creating a clear roadmap. Start by defining specific, measurable goals, as this brings clarity to what you want to accomplish and sets up precise targets to hit.
+          </p>
+        </div>
+
+        <!-- Images and Widgets -->
+        <div class="lg:w-1/3 mt-10 lg:mt-0 flex flex-wrap gap-4 justify-center">
+          <!-- Widget 1 -->
+          <div
+            class="bg-white shadow-lg rounded-lg p-4 w-40 h-55 lg:mt-8 flex flex-col items-center justify-center"
+          >
+            <p class="text-gray-700 font-bold text-lg">Text</p>
+            <p class="text-3xl font-bold text-red-500">47%</p>
+          </div>
+          <!-- Widget 2 -->
+          <div class="bg-white shadow-lg rounded-lg p-4 w-40 h-50 lg:mb-8">
+            <p class="text-gray-700 font-bold">Title</p>
+            <ul class="mt-4 space-y-2">
+              <li class="flex justify-between align-center">
+                <p class="text-sm text-gray-500">Instagram</p>
+                <p class="text-right text-yellow-500">63.4%</p>
+              </li>
+              <div class="progress h-1">
+                <div class="progress-bar bg-warning" role="progressbar" style="width: 63%; height: 5px;" ></div>
+              </div>
+              <li class="flex justify-between align-center">
+                <p class="text-sm text-gray-500">Facebook</p>
+                <p class="text-right text-blue-500">50.2%</p>
+              </li>
+              <div class="progress h-1">
+                <div class="progress-bar bg-primary" role="progressbar" style="width: 50.2%; height: 5px;" ></div>
+              </div>
+              <li class="flex justify-between align-center">
+                <p class="text-sm text-gray-500">Twitter</p>
+                <p class="text-right text-red-500">32.6%</p>
+              </li>
+              <div class="progress h-1">
+                <div class="progress-bar bg-danger" role="progressbar" style="width: 32.6%; height: 5px;" ></div>
+              </div>
+              <li class="flex justify-between align-center">
+                <p class="text-sm text-gray-500">Behance</p>
+                <p class="text-right text-green-500">10.4%</p>
+              </li>
+              <div class="progress h-1">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 10%; height: 5px;" ></div>
+              </div>
+            </ul>
+          </div>
+          <!-- Widget 3 (Graph) -->
+          <div
+            class="bg-gray-900 text-white shadow-lg rounded-lg p-4 w-40 lg:h-50 flex flex-col justify-between"
+          >
+            <h4 class="font-semibold">Income And Outcome</h4>
+            <p class="text-sm">Graph showing income vs. outcome</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Profile and Goal Tracking Section -->
+    <section class="py-16 bg-blue-100" id="services">
+      <div
+        class="max-w-7xl mx-auto px-4 md:px-8 
+
+        flex items-center justify-between text-center flex-wrap"
+      >
+        <!-- Profile Card -->
+        <div class="bg-white shadow-lg rounded-lg p-6 w-60 text-center">
+          <img
+            src="https://via.placeholder.com/80"
+            alt="Profile Image"
+            class="w-20 h-20 rounded-full mx-auto mb-4"
+          />
+          <h3 class="text-xl font-semibold text-gray-800">Amelia Black</h3>
+          <p class="text-gray-500 text-sm">Professional Developer</p>
+          <div class="mt-4 flex justify-between text-gray-">
+            <div>Views</div>
+            <div>12</div>
+            <div>Followers</div>
+            <div>12</div>
+            <div>Rating</div>
+            <div>4.9</div>
+          </div>
+        </div>
+
+        <!-- Goal Tracking Widget -->
+        <div class="bg-white shadow-lg rounded-lg p-6 w-60 mt-8 lg:mt-0">
+          <p class="text-gray-800 font-bold">Title</p>
+          <ul class="mt-4 space-y-2">
+            <li class="flex justify-between align-center">
+              <p class="text-sm text-gray-500">Instagram</p>
+              <p class="text-right text-yellow-500">63.4%</p>
+            </li>
+            <li class="flex justify-between align-center">
+              <p class="text-sm text-gray-500">Facebook</p>
+              <p class="text-right text-blue-500">50.2%</p>
+            </li>
+            <li class="flex justify-between align-center">
+              <p class="text-sm text-gray-500">Twitter</p>
+              <p class="text-right text-red-500">32.6%</p>
+            </li>
+            <li class="flex justify-between align-center">
+              <p class="text-sm text-gray-500">Behance</p>
+              <p class="text-right text-green-500">10.4%</p>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Text Content -->
+        <div class="lg:w-1/2 mt-8 lg:mt-0 space-y-4">
+          <h2 class="text-3xl font-bold text-gray-800">
+            Set and track your goals for success
+          </h2>
+          <p class="text-gray-600">
+            Embrace life's vastness, venture forth, and discover the wonders
+            waiting beyond. The world beckons, seize its grand offerings now!
+          </p>
+          <p class="text-gray-600">
+            Embrace life's vastness, venture forth, and discover the wonders
+            waiting beyond. The world beckons, seize its grand offerings now!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16">
+      <div class="max-w-7xl mx-auto px-4 md:px-8 text-center">
+        <h2 class="text-3xl font-bold text-gray-800">
+          Pomodoro Time Management
+        </h2>
+        <p class="text-gray-600 mt-2">
+          The Pomodoro Technique boosts productivity by splitting work into 25-minute focused sprints, followed by breaks, enhancing focus and preventing burnout.
+        </p>
+
+        <!-- Testimonials Cards -->
+        <div class="lg: max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center mt-5">
+        <div class="p-6 bg-white rounded-lg shadow-md ml-2 mt-2">
+          <div class="flex justify-center mb-4">
+            <div
+              class="w-10 h-12 rounded-full flex items-center justify-center"
+            >
+            <img src="https://i.ibb.co/fr0rMZ5/goals-goal-svgrepo-com.png" alt="goals-goal-svgrepo-com">
+            </div>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">
+            Focus Goals
+          </h3>
+          <p class="text-gray-600 pl-4 pr-4">
+            Stay Connected and Achieve the Goals and<br>
+            become Successfully
+          </p>
+        </div>
+
+          <!-- Testimonial 2 -->
+          <div class="p-6 bg-white rounded-lg shadow-md ml-2 mt-2">
+            <div class="flex justify-center mb-4">
+              <div
+                class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-green-600"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M10 2a8 8 0 110 16 8 8 0 010-16zm1 4a1 1 0 00-1 1v4H7a1 1 0 000 2h4a1 1 0 001-1V7a1 1 0 00-1-1z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">
+              Time Management
+            </h3>
+            <p class="text-gray-600">
+              Stay accountable with time tracking and insights.
+            </p>
+          </div>
+
+          <!-- Testimonial 3 -->
+          <div class="p-6 bg-white rounded-lg shadow-md ml-2 mt-2">
+            <div class="flex justify-center mb-4">
+              <div
+                class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center"
+              >
+                <img class="w-5" src="https://i.ibb.co/nkS2b3P/alert-svgrepo-com.png" alt="alert-svgrepo-com">
+              </div>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">
+              Alert
+            </h3>
+            <p class="text-gray-600">
+              Stay Alert and Always Up-to-date.
+            </p>
+          </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+  
+    <!-- Footer Section -->
+    <footer class="bg-blue-100 py-12 ">
+      <div class="max-w-6xl mx-auto  gap-20 text-gray-700 flex justify-between align-center">
+        <!-- Get In Touch Column -->
+        <div class="ml-10">
+          <h3 class="font-semibold text-lg mb-4">Get In Touch</h3>
+          <p class="text-sm">The quick fox jumps over the lazy dog</p>
+          <div class="flex space-x-4 mt-4">
+            <a href="https://www.facebook.com/"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#"><i class="fa-solid fa-x "></i> </a>
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+        
+        <!-- Company Info Column -->
+        <div>
+          <h3 class="font-semibold text-lg mb-4">Company Info</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#about" class="hover:underline">About us</a></li>
+            <li><a href="#services" class="hover:underline">Services</a></li>
+            <li><a href="auth.html" class="hover:underline">Sign Up</a></li>
+          </ul>
+        </div>
+        
+        <!-- Features Column -->
+        <div class="mr-10">
+          <h3 class="font-semibold text-lg mb-4">Features</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="hover:underline">Tasks Creation </a></li>
+            <li><a href="#" class="hover:underline">Focus Mode</a></li>
+            <li><a href="#" class="hover:underline">Tasks Analyatics </a></li>
+            <li><a href="#" class="hover:underline">Goal Creation</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-span-2 md:col-span-4 text-center text-sm text-gray-500 mt-10">
+        @Copyright 2024 Made by Bytes Builder
+      </div>
+    </footer>
+    
   </body>
   <script src="./Theme.js"></script>
 </html>
