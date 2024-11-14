@@ -1,9 +1,10 @@
 /* Custom Colors for Light and Dark Themes */
 :root {
-  --primary-color-light: #1a202c; /* Dark Blue */
+  /* --primary-color-light: #1a202c; Dark Blue */
+  --primary-color-light: #e1f4ff; 
   --secondary-color-light: #4a5568; /* Grayish Blue */
   --accent-color-light: #3182ce; /* Bright Blue */
-  --background-color-light: #edf2f7; /* Light Background */
+ /* --background-color-light: #edf2f7;  Light Background */
   --text-color-light: #2d3748; /* Dark Text Color */
 
   --primary-color-dark: #2d3748; /* Light Blue */
