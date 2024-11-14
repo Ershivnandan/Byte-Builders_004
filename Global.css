@@ -33,6 +33,15 @@ button {
   background-color: var(--accent-color-light);
   color: white;
 }
+.dropdown{
+  background-color: var(--primary-color-dark);
+  color: white;
+  
+}
+
+.border{
+  border: 1px solid #2d3748 !important;
+}
 
 /* Dark Theme Style */
 .dark-mode {
@@ -50,4 +59,15 @@ button {
 
 .dark-mode button {
   background-color: var(--accent-color-dark);
+}
+
+.dark-mode .dropdown{
+  background-color: var(--primary-color-dark);
+  color: white;
+  background-color: var(--primary-color-light);
+  color: white;
+}
+
+.dark-mode .border{
+  border: 1px solid white !important;
 }
