@@ -2,13 +2,12 @@ class sidebarManager extends HTMLElement {
   connectedCallback() {
     // Define the routes and their corresponding labels
     const routes = [
-      { name: "Home", url: "home.html" },
-      { name: "Task", url: "task.html" },
-      { name: "Calendar", url: "calender.html" },
-      { name: "Music", url: "music.html" },
-      { name: "Analytics", url: "analytics.html" },
+      { name: "Home", url: "home.html", icon: `<i class="fa-solid fa-house"></i>` },
+      { name: "Task", url: "task.html", icon: `<i class="fa-solid fa-bars-progress"></i>` },
+      { name: "Calendar", url: "calender.html", icon: `<i class="fa-solid fa-calendar-days"></i>` },
+      { name: "Music", url: "music.html", icon: `<i class="fa-solid fa-podcast"></i>` },
+      { name: "Analytics", url: "analytics.html", icon: `<i class="fa-solid fa-chart-line"></i>` },
     ];
-
 
     const routeLinks = routes
       .map((route) => {
@@ -16,25 +15,28 @@ class sidebarManager extends HTMLElement {
           ? "bg-gray-100 dark:bg-gray-700"
           : "";
         return `
-            <li>
+            <li class="w-full">
               <a
                 href="${route.url}"
-                class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${isActive}"
+                class="flex gap-2 items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${isActive}"
               >
-                ${route.name}
+              <span>${route.icon}</span>
+              <span> ${route.name}</span>
+                
               </a>
             </li>
           `;
       })
       .join(""); 
-
+      
   
     this.innerHTML = `
         <div
+          style="width: 20%"
           id="sidebar"
-          class="fixed top-0 left-0 z-40 h-screen p-4 overflow-y-auto bg-white w-64 dark:bg-gray-800 transform md:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out"
+          class="fixed w-full  top-0 left-0 z-40 h-screen p-4 overflow-y-auto bg-white w-64 dark:bg-gray-800 transform md:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out"
         >
-          <h5 class="text-base font-semibold text-gray-500 uppercase dark:text-gray-400">
+          <h5 class="text-base p-2 font-semibold text-gray-500 uppercase dark:text-gray-400">
             Menu
           </h5>
   
