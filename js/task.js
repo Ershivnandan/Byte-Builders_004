@@ -1,18 +1,180 @@
+import { checkLoggedin } from "./auth.js";
+import { database } from "./firebase.config.js";
+import { auth } from "./firebase.config.js";
+import {
+  get,
+  ref,
+  set,
+  push,
+  update,
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+const modal = document.getElementById("static-modal");
+
+document.querySelectorAll("[data-modal-hide]").forEach((button) => {
+  button.addEventListener("click", () => {
+    modal.classList.add("hidden");
+  });
+});
 const TaskPagetitle = document.getElementById("TaskPagetitle");
 TaskPagetitle.innerText = "Task";
 
+checkLoggedin();
+
+document.getElementById("createTaskBtn").addEventListener("click", () => {
+  document.getElementById("static-modal").classList.remove("hidden");
+});
+
+// Hide modal on cancel or close button click
+document.querySelectorAll("[data-modal-hide]").forEach((el) => {
+  el.addEventListener("click", () => {
+    document.getElementById("static-modal").classList.add("hidden");
+  });
+});
+
 const bgColors = [
-  "background: linear-gradient(to right, #0b8793, #360033);",
-  "background: linear-gradient(to right, #43cea2, #185a9d);",
-  "background: linear-gradient(to right, #6441a5, #2a0845);",
-  "background: linear-gradient(to right, #feac5e, #c779d0, #4bc0c8);",
-  "background: linear-gradient(to right, #136a8a, #267871);",
-  "background: linear-gradient(to left, #004ff9, #fff94c);",
-  "background: linear-gradient(to right, #ee9ca7, #ffdde1);",
-  "background: linear-gradient(to left, #2c3e50, #3498db);",
-  "background: linear-gradient(to right, #fc00ff, #00dbde);",
-  "background: linear-gradient(to right, #00c9ff, #92fe9d);",
-  "background: linear-gradient(to right, #673ab7, #512da8);",
-  "background: linear-gradient(to right, #76b852, #8dc26f);",
-  "background: linear-gradient(to right, #c2e59c, #64b3f4);",
+  "bg-gradient-to-r from-teal-500 to-blue-900",
+  "bg-gradient-to-r from-green-400 to-blue-600",
+  "bg-gradient-to-r from-purple-600 to-indigo-900",
+  "bg-gradient-to-r from-pink-400 via-purple-500 to-blue-600",
+  "bg-gradient-to-r from-teal-600 to-green-700",
+  "bg-gradient-to-l from-blue-700 to-yellow-300",
+  "bg-gradient-to-r from-pink-300 to-pink-100",
+  "bg-gradient-to-l from-gray-800 to-blue-400",
+  "bg-gradient-to-r from-fuchsia-500 to-cyan-500",
+  "bg-gradient-to-r from-cyan-400 to-green-300",
+  "bg-gradient-to-r from-indigo-600 to-indigo-500",
+  "bg-gradient-to-r from-green-500 to-green-300",
+  "bg-gradient-to-r from-green-200 to-blue-200",
 ];
+
+const taskForm = document.getElementById("taskForm");
+
+taskForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const userId = await auth.currentUser.uid;
+  console.log(userId);
+  const title = document.getElementById("tTitle").value;
+  const description = document.getElementById("tDescription").value;
+  const startDate = new Date().toISOString();
+  const endDate = document.getElementById("tEnddate").value;
+
+  // Generate a unique task ID
+  const taskId = push(ref(database, "tasks")).key;
+
+  const newTask = {
+    userId,
+    title,
+    description,
+    startDate,
+    endDate,
+    isArchive: false,
+    goals: [],
+    contributors: [],
+  };
+
+  await set(ref(database, `tasks/${taskId}`), newTask);
+  modal.classList.add("hidden");
+  getTasksByUser();
+});
+
+function getTasksByUser() {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const userId = user.uid;
+      const tasksRef = ref(database, "tasks");
+      const snapshot = await get(tasksRef);
+
+      if (snapshot.exists()) {
+        const tasks = snapshot.val();
+        const userTasks = Object.entries(tasks)
+          .filter(([taskId, task]) => task.userId === userId)
+          .map(([taskId, task]) => ({ taskId, ...task }));
+
+        displayTasks(userTasks);
+        return;
+      } else {
+        console.log("No tasks found for the user.");
+        return [];
+      }
+    } else {
+      console.log("User not logged in.");
+      return [];
+    }
+  });
+}
+
+async function deleteTask(taskId) {
+    const taskRef = ref(database, `tasks/${taskId}`);
+    await set(taskRef, null);
+    getTasksByUser();
+}
+
+function displayTasks(userTasks) {
+  const taskGrid = document.getElementById("taskGrid");
+  taskGrid.innerHTML = "";
+
+  userTasks.forEach((task, index) => {
+    const card = document.createElement("div");
+    card.className = `flex flex-col justify-between border rounded-lg p-4 text-white ${
+      bgColors[Math.floor(Math.random() * bgColors.length)]
+    }`;
+    card.id = task.taskId;
+    const detailButtonId = `taskDetail-${task.taskId}`;
+    const deleteButtonId = `taskDelete-${task.taskId}`;
+
+    card.innerHTML = `
+        <div class="flex-grow">
+          <div class="flex justify-between">
+            <h4 class="text-lg font-bold">${task.title}</h4>
+            <div id="${deleteButtonId}" class="text-red-500 cursor-pointer">
+              <i class="fa-solid fa-trash"></i>
+            </div>
+          </div>
+          <p class="text-base text-gray-400 overflow-hidden text-ellipsis whitespace-normal line-clamp-3">
+            ${task.description}
+          </p>
+        </div>
+        <button id="${detailButtonId}" class="flex mt-4 w-full justify-center items-center gap-1 group font-medium border border-gray-100 rounded-lg px-2">
+          <span>Details</span>
+          <span class="group-hover:translate-x-1/2 duration-200 mt-1"><i class="fa-solid fa-arrow-right-long"></i></span>
+        </button>
+      `;
+
+    taskGrid.appendChild(card);
+
+    document.getElementById(detailButtonId).addEventListener("click", () => {
+        window.location.href = `taskdetail.html?taskId=${task.taskId}`;
+    });
+    document.getElementById(deleteButtonId).addEventListener("click", () => {
+        deleteTask(task.taskId)
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", ()=>{
+    getTasksByUser();
+})
+
+// description
+// :
+// "this will ensureseemless website creation of the myntra app."
+// endDate
+// :
+// "2024-11-22"
+// isArchive
+// :
+// false
+// startDate
+// :
+// "2024-11-14T20:05:16.112Z"
+// taskId
+// :
+// "-OBgGv-rrbE_P4JJI7ao"
+// title
+// :
+// "creation of html website"
+// userId
+// :
+// "0mIfj8HrDxV6xwEJrLJzvIDq7ev2"
