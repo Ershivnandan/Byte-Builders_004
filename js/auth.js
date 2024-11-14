@@ -21,14 +21,15 @@ const idToken = localStorage.getItem("idToken");
 
 // Check if current user is login or not
 export function checkLoggedin() {
-  const idToken = localStorage.getItem("idToken");
+  // const idToken = localStorage.getItem("idToken");
+  console.log("called")
   if (!idToken || isTokenExpired(idToken)) {
     alert("Session expired. Please log in again.");
     localStorage.removeItem("idToken");
     localStorage.removeItem("refreshToken");
-    window.location.href = "login.html";
+    window.location.href = "/auth.html";
   } else {
-    window.location.href = "home.html";
+    return true
   }
 }
 
@@ -66,36 +67,6 @@ export async function fetchLogindetails(loginData) {
     alert(`Error: ${error.code ? error.code : error.message}`);
   }
 }
-
-// loginForm.addEventListener("submit", (e) => {
-//   e.preventDefault();
-
-//   const email = document.getElementById("email").value;
-//   const password = document.getElementById("password").value;
-
-//   const loginData = {
-//     email: email,
-//     password: password,
-//     returnSecureToken: true,
-//   };
-
-//   fetchLogindetails(loginData);
-// });
-
-// Sign up with email and password
-// signupForm.addEventListener("submit", (e) => {
-//   e.preventDefault();
-
-//   const email = document.getElementById("userEmail").value;
-//   const password = document.getElementById("userPass").value;
-
-//   const userData = {
-//     password: password,
-//     username: email,
-//   };
-
-//   registerUser(userData);
-// });
 
 export async function registerUser(userData) {
   try {
@@ -144,7 +115,10 @@ export function signOutUser() {
     .signOut()
     .then(() => {
       console.log("User signed out.");
-      window.location.href = "login.html";
+      localStorage.removeItem("idToken");
+      localStorage.removeItem("refreshToken");
+
+      window.location.href = "auth.html";
     })
     .catch((error) => {
       console.error("Sign-out error:", error);

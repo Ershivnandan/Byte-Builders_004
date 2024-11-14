@@ -43,7 +43,7 @@ button {
   
 }
 
-.border{
+.custom-border{
   border: 1px solid #2d3748 !important;
 }
 
@@ -73,7 +73,7 @@ button {
   color: white;
 }
 
-.dark-mode .border{
+.dark-mode .custom-border{
   border: 1px solid white !important;
 }
 

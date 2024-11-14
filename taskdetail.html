@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="taskDetail"></title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./Global.css" />
+    <script src="https://kit.fontawesome.com/49b1f13654.js" crossorigin="anonymous"></script>
+</head>
+<body class="h-screen bg-gray-100">
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="md:w-1/4 lg:relative sm:absolute w-0">
+            <side-bar class=""></side-bar>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="w-full">
+            <!-- Navbar -->
+            <div class="w-full bg-blue-500 text-white">
+                <sub-nav></sub-nav>
+            </div>
+
+            <!-- Main Content below Navbar -->
+            <div class="my-4 mx-5">
+               <div id="goalsContainer" class="flex justify-center items-center">
+                    <h5 class="text-2xl font-bold">No Goals Setted yet</h5>
+               </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script files -->
+    <script src="./managers/sidebar.manager.js"></script>
+    <script type="module" src="./managers/subNav.manager.js"></script>
+    <script type="module" src="./js/taskDetails.js"></script>
+    <script src="./Theme.js"></script>
+</body>
+</html>

@@ -15,6 +15,7 @@ class subnavManager extends HTMLElement {
       { name: "Calendar", url: "calendar.html" },
       { name: "Music", url: "music.html" },
       { name: "Analytics", url: "analytics.html" },
+      { name: "Task Goals", url: "taskdetail.html" },
     ];
 
     const currentPage = window.location.href;

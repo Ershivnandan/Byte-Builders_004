@@ -4,7 +4,7 @@ class sidebarManager extends HTMLElement {
     const routes = [
       { name: "Home", url: "home.html", icon: `<i class="fa-solid fa-house"></i>` },
       { name: "Task", url: "task.html", icon: `<i class="fa-solid fa-bars-progress"></i>` },
-      { name: "Calendar", url: "calender.html", icon: `<i class="fa-solid fa-calendar-days"></i>` },
+      { name: "Calendar", url: "calendar.html", icon: `<i class="fa-solid fa-calendar-days"></i>` },
       { name: "Music", url: "music.html", icon: `<i class="fa-solid fa-podcast"></i>` },
       { name: "Analytics", url: "analytics.html", icon: `<i class="fa-solid fa-chart-line"></i>` },
     ];
