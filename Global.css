@@ -1,6 +1,6 @@
 /* Custom Colors for Light and Dark Themes */
 :root {
-  --primary-color-light: #1a202c; /* Dark Blue */
+  --primary-color-light: #1b2029; /* Dark Blue */
   --secondary-color-light: #4a5568; /* Grayish Blue */
   --accent-color-light: #3182ce; /* Bright Blue */
   --background-color-light: #edf2f7; /* Light Background */
@@ -9,7 +9,7 @@
   --primary-color-dark: #2d3748; /* Light Blue */
   --secondary-color-dark: #a0aec0; /* Light Gray */
   --accent-color-dark: #e53e3e; /* Red */
-  --background-color-dark: #2d3748; /* Dark Background */
+  --background-color-dark: #1b2029; /* Dark Background */
   --text-color-dark: #f7fafc; /* Light Text Color */
 }
 
