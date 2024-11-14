@@ -3,6 +3,14 @@ const signupForm = document.getElementById("signupForm");
 const signUpButton = document.getElementById('signUp');
 const signInButton = document.getElementById('signIn');
 const container = document.getElementById('container');
+const googleSignup = document.getElementById("googleSignup");
+import { fetchLogindetails, googleLogin, registerUser } from "./js/auth.js";
+
+
+
+googleSignup.addEventListener("click", ()=>{
+	googleLogin();
+})
 
 signUpButton.addEventListener('click', () => {
 	container.classList.add("right-panel-active");
@@ -12,7 +20,6 @@ signInButton.addEventListener('click', () => {
 	container.classList.remove("right-panel-active");
 });
 
-import { fetchLogindetails, registerUser } from "./js/auth.js";
 
 loginForm.addEventListener("submit", (e) => {
   e.preventDefault();
