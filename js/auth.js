@@ -43,7 +43,7 @@ export function googleLogin() {
       const token = await user.getIdToken();
       localStorage.setItem("idToken", token);
       localStorage.setItem("refreshToken", user.refreshToken);
-      
+
       const profile = {
         photoURL: user.photoURL,
         displayName: user.displayName,
@@ -153,6 +153,8 @@ export function signOutUser() {
       console.log("User signed out.");
       localStorage.removeItem("idToken");
       localStorage.removeItem("refreshToken");
+      localStorage.removeItem("userProfile");
+
 
       window.location.href = "auth.html";
     })
