@@ -5,8 +5,7 @@ import { signOutUser, getUserProfile } from '../js/auth.js';
 class subnavManager extends HTMLElement {
   connectedCallback() {
     const userProfile = getUserProfile(); 
-
-    const userImage = userProfile.photoURL || "https://dummyjson.com/image/150";
+    const userImage = userProfile.photoURL;
     const userName = userProfile.displayName || "GOAT";
 
     const routes = [

@@ -37,16 +37,32 @@ export function checkLoggedin() {
 export function googleLogin() {
   const provider = new GoogleAuthProvider();
   signInWithPopup(auth, provider)
-    .then((result) => {
+    .then(async (result) => {
       const user = result.user;
-      console.log("Google login successful:", user);
+
+      const token = await user.getIdToken();
+      localStorage.setItem("idToken", token);
+      localStorage.setItem("refreshToken", user.refreshToken);
+      
+      const profile = {
+        photoURL: user.photoURL,
+        displayName: user.displayName,
+        email: user.email,
+      };
+
+      localStorage.setItem("userProfile", JSON.stringify(profile));
+
+      console.log("Google login successful:", profile);
+      alert("Login successful!");
 
       window.location.href = "/home.html";
     })
     .catch((error) => {
       console.error("Error during Google login:", error);
+      alert("Google login failed.");
     });
 }
+
 
 // Email and Password login
 export async function fetchLogindetails(loginData) {
@@ -70,44 +86,64 @@ export async function fetchLogindetails(loginData) {
 
 export async function registerUser(userData) {
   try {
+   
     const userCredential = await createUserWithEmailAndPassword(
       auth,
-      userData.username,
+      userData.email,
       userData.password
     );
 
-    const token = await userCredential.user.getIdToken();
-    localStorage.setItem("idToken", token);
+    const user = userCredential.user;
 
-    localStorage.setItem("refreshToken", userCredential.user.refreshToken);
+   
+    await user.updateProfile({
+      displayName: userData.name,
+      photoURL: userData.photoURL || "https://avatar.iran.liara.run/public/48", 
+    });
+
+    const token = await user.getIdToken();
+
+    const profile = {
+      photoURL: user.photoURL,
+      displayName: user.displayName,
+      email: user.email,
+    };
+    localStorage.setItem("userProfile", JSON.stringify(profile));
+    localStorage.setItem("idToken", token);
+    localStorage.setItem("refreshToken", user.refreshToken);
 
     alert("Signup successful!");
     window.location.href = "/home.html";
   } catch (err) {
-    throw new Error(err.message);
+    alert(`Signup Error: ${err.message}`);
   }
 }
 
-// Get user profile
+
 export function getUserProfile() {
-  const user = auth.currentUser;
   try {
-    if (user) {
-      return {
-        photoURL: user.photoURL,
-        displayName: user.displayName,
-        email: user.email,
-      };
-    }
+    const profile = JSON.parse(localStorage.getItem("userProfile"));
+
+   
+    if (profile) return profile;
+
+   
     return {
-      photoURL: "/docs/images/people/default-avatar.jpg",
+      photoURL: "https://avatar.iran.liara.run/public/48",
       displayName: "Guest",
       email: "No Email",
     };
   } catch (error) {
-    console.log("Cant not get profile details", error)
+    console.error("Unable to retrieve profile details:", error);
+
+    return {
+      photoURL: "https://avatar.iran.liara.run/public/48", 
+      displayName: "Guest",
+      email: "No Email",
+    };
   }
 }
+
 
 //  Log out or sign out
 export function signOutUser() {

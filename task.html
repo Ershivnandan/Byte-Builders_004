@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title id="TaskPagetitle"></title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="./logo.png" type="image/*">
+
     <link rel="stylesheet" href="./Global.css" />
     <script
       src="https://kit.fontawesome.com/49b1f13654.js"
@@ -153,6 +155,31 @@
               </div>
             </div>
           </div>
+
+          <div id="editTaskModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
+            <div class="bg-white rounded-lg w-96 p-6">
+              <h3 class="text-lg font-bold mb-4">Edit Task</h3>
+              
+              <!-- Title Field -->
+              <label class="block mb-2 text-sm font-medium">Title</label>
+              <input id="taskTitle" type="text" class="w-full mb-4 border rounded-lg p-2" />
+          
+              <!-- Description Field -->
+              <label class="block mb-2 text-sm font-medium">Description</label>
+              <textarea id="taskDescription" rows="4" class="w-full mb-4 border rounded-lg p-2"></textarea>
+          
+              <!-- Start Date Field -->
+              <label class="block mb-2 text-sm font-medium">Start Date</label>
+              <input id="taskStartDate" type="date" class="w-full mb-4 border rounded-lg p-2" />
+          
+              <!-- Action Buttons -->
+              <div class="flex justify-end gap-2">
+                <button id="cancelEditButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg">Cancel</button>
+                <button id="saveTaskButton" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Save</button>
+              </div>
+            </div>
+          </div>
+          
         </div>
       </div>
     </div>
