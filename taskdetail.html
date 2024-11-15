@@ -1,35 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title id="taskDetail"></title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="./logo.png" type="image/*">
+
     <link rel="stylesheet" href="./Global.css" />
-    <script src="https://kit.fontawesome.com/49b1f13654.js" crossorigin="anonymous"></script>
-</head>
-<body class="h-screen bg-gray-100">
+    <script
+      src="https://kit.fontawesome.com/49b1f13654.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body class="h-screen bg-gray-100">
     <div class="flex">
-        <!-- Sidebar -->
-        <div class="md:w-1/4 lg:relative sm:absolute w-0">
-            <side-bar class=""></side-bar>
+      <!-- Sidebar -->
+      <div class="md:w-1/4 lg:relative sm:absolute w-0">
+        <side-bar class=""></side-bar>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="w-full">
+        <!-- Navbar -->
+        <div class="w-full bg-blue-500 text-white">
+          <sub-nav></sub-nav>
         </div>
 
-        <!-- Main Content Area -->
-        <div class="w-full">
-            <!-- Navbar -->
-            <div class="w-full bg-blue-500 text-white">
-                <sub-nav></sub-nav>
-            </div>
+        <!-- Main Content below Navbar -->
+        <div class="my-4 mx-5">
+          <div class="px-10 flex justify-end my-2">
+            <button
+              id="createGoalBtn"
+              type="button"
+              class="border border-black font-semibold px-2 py-1 rounded-md shadow-md hover:scale-110 duration-200"
+            >
+              Add Goal
+            </button>
+          </div>
+          <div class="block border">
+            <h5 class="font-semibold text-xl">Task Details</h5>
+          </div>
+          <div  class="flex justify-center items-center my-2">
+            <!-- <h5 class="text-2xl font-bold">No Goals Setted yet</h5> -->
 
-            <!-- Main Content below Navbar -->
-            <div class="my-4 mx-5">
-               <div id="goalsContainer" class="flex justify-center items-center">
-                    <h5 class="text-2xl font-bold">No Goals Setted yet</h5>
-               </div>
+            <table class="w-full text-sm text-left rtl:text-right rounded-lg">
+
+                <thead class="text-xs border border-gray-600 uppercase shadow-lg shadow-black-500/100">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Title
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Description
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Start date
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Start Time
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            End Date
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            End Time
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Status
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            <span >Edit</span>
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            <span >Archive</span>
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            <span >delete</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="goalsContainer">
+
+                </tbody>
+            </table>
+          </div>
+
+
+          <div
+            id="goal-modal"
+            data-modal-backdrop="static"
+            tabindex="-1"
+            aria-hidden="true"
+            class="hidden fixed inset-0 z-50 justify-center items-center w-full h-full bg-black bg-opacity-50"
+          >
+            <div class="relative p-4 w-full max-w-2xl max-h-full mx-auto">
+              <!-- Modal content -->
+              <div
+                class="relative dark:text-[var(--text-color-light)] text-[var(--text-color-light)] dark:bg-[var(--background-color-light)] bg-[var(--background-color-dark)] rounded-lg shadow"
+              >
+                <!-- Modal header -->
+                <div
+                  class="flex items-center justify-between p-4 md:p-5 border-b rounded-t"
+                >
+                  <h3 class="text-xl font-semibold">Add Goal</h3>
+                  <button
+                    type="button"
+                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                    data-modal-hide="goal-modal"
+                  >
+                    <svg
+                      class="w-3 h-3"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 14 14"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                      />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                  </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-4 md:p-5">
+                  <form id="goalForm" class="p-2">
+                    <!-- Goal Title -->
+                    <label class="block">Goal Title</label>
+                    <input
+                      id="gTitle"
+                      type="text"
+                      name="taskTitle"
+                      class="w-full border rounded-md px-3 py-2"
+                      placeholder="Enter task title"
+                      required
+                    />
+
+                    <!-- Description -->
+                    <label class="block">Description</label>
+                    <textarea
+                      id="gDescription"
+                      name="description"
+                      class="w-full border rounded-md px-3 py-2"
+                      rows="3"
+                      placeholder="Enter task description"
+                      required
+                    ></textarea>
+
+                    <!-- Start Date and Time -->
+                    <label class="block">Start Date</label>
+                    <input
+                      id="gStartdate"
+                      type="date"
+                      name="startDate"
+                      class="w-full border rounded-md px-3 py-2"
+                      required
+                    />
+                    <label class="block">Start Time</label>
+                    <input
+                      id="gStarttime"
+                      type="time"
+                      name="startTime"
+                      class="w-full border rounded-md px-3 py-2"
+                      required
+                    />
+
+                    <!-- End Date and Time -->
+                    <label class="block">End Date</label>
+                    <input
+                      id="gEnddate"
+                      type="date"
+                      name="endDate"
+                      class="w-full border rounded-md px-3 py-2"
+                      required
+                    />
+                    <label class="block">End Time</label>
+                    <input
+                      id="gEndtime"
+                      type="time"
+                      name="endTime"
+                      class="w-full border rounded-md px-3 py-2"
+                      required
+                    />
+                    <div
+                      class="flex items-center px-4 py-2 md:px-5 border-t border-gray-200 rounded-b"
+                    >
+                      <button
+                        type="submit"
+                        form="goalForm"
+                        class="dark:text-[var(--text-color-light)] text-[var(--text-color-dark)] bg-blue-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                      >
+                        Add goal
+                      </button>
+                      <button
+                        type="button"
+                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 bg-gray-600 rounded-lg"
+                        data-modal-hide="goal-modal"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+                <!-- Modal footer -->
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
 
     <!-- Script files -->
@@ -37,5 +221,5 @@
     <script type="module" src="./managers/subNav.manager.js"></script>
     <script type="module" src="./js/taskDetails.js"></script>
     <script src="./Theme.js"></script>
-</body>
+  </body>
 </html>

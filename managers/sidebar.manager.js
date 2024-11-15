@@ -12,13 +12,13 @@ class sidebarManager extends HTMLElement {
     const routeLinks = routes
       .map((route) => {
         const isActive = window.location.href.includes(route.url)
-          ? "bg-gray-100 dark:bg-gray-700"
+          ? "bg-orange-200 text-orange-500"
           : "";
         return `
             <li class="w-full">
               <a
                 href="${route.url}"
-                class="flex gap-2 items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${isActive}"
+                class="flex gap-2 items-center p-2 rounded-lg text-white hover:bg-orange-200 hover:text-orange-500 ${isActive}"
               >
               <span>${route.icon}</span>
               <span> ${route.name}</span>
@@ -34,16 +34,16 @@ class sidebarManager extends HTMLElement {
         <div
           style="width: 20%"
           id="sidebar"
-          class="fixed w-full  top-0 left-0 z-40 h-screen p-4 overflow-y-auto bg-white w-64 dark:bg-gray-800 transform md:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out"
+          class="fixed w-full  top-0 left-0 z-40 h-screen p-4 overflow-y-auto w-64 bg-gray-900 transform md:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out"
         >
-          <h5 class="text-base p-2 font-semibold text-gray-500 uppercase dark:text-gray-400">
+          <h5 class="text-base p-2 font-semibold text-white uppercase ">
             Menu
           </h5>
   
           <!-- Close Button (Hidden on large screens) -->
           <button
             id="closeSidebar"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2 right-2 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white md:hidden"
+            class="text-gray-400 bg-transparent hover:bg-orange-200 hover:text-orange-500 rounded-lg text-sm w-8 h-8 absolute top-2 right-2 inline-flex items-center justify-center md:hidden"
           >
             <svg
               class="w-3 h-3"

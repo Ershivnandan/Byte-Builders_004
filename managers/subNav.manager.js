@@ -5,8 +5,7 @@ import { signOutUser, getUserProfile } from '../js/auth.js';
 class subnavManager extends HTMLElement {
   connectedCallback() {
     const userProfile = getUserProfile(); 
-
-    const userImage = userProfile.photoURL || "https://dummyjson.com/image/150";
+    const userImage = userProfile.photoURL;
     const userName = userProfile.displayName || "GOAT";
 
     const routes = [
@@ -23,7 +22,7 @@ class subnavManager extends HTMLElement {
     const headingText = currentRoute ? currentRoute.name : "Your Website";
 
     this.innerHTML = `
-        <nav class="p-4 shadow-md">
+        <nav class="p-4  bg-orange-500 shadow-lg shadow-black-500/50">
           <div class="flex items-center justify-between">
             <!-- Heading on the left -->
             <div class="text-xl font-semibold">${headingText}</div>
@@ -42,6 +41,7 @@ class subnavManager extends HTMLElement {
                   class="w-8 h-8 rounded-full shadow shadow-white-500/50"
                   src="${userImage}"
                   alt="user photo"
+                  loading="lazy"
                 />
               </button>
   

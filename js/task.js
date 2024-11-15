@@ -79,7 +79,7 @@ taskForm.addEventListener("submit", async (e) => {
   getTasksByUser();
 });
 
-function getTasksByUser() {
+export function getTasksByUser() {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       const userId = user.uid;
@@ -92,9 +92,18 @@ function getTasksByUser() {
           .filter(([taskId, task]) => task.userId === userId)
           .map(([taskId, task]) => ({ taskId, ...task }));
 
-        displayTasks(userTasks);
-        return;
+        if (userTasks) displayTasks(userTasks);
       } else {
+        const taskGrid = document.getElementById("taskGrid");
+
+        taskGrid.innerHTML = "";
+        taskGrid.innerHTML = `
+          <div class="flex justify-center items-center text-center font-bold text-3xl">
+              <p>
+                You have no task yet!
+              </p>
+            </div>
+        `;
         console.log("No tasks found for the user.");
         return [];
       }
@@ -105,10 +114,34 @@ function getTasksByUser() {
   });
 }
 
+async function updateTaskInFirebase(updatedTask) {
+  const taskRef = ref(database, `tasks/${updatedTask.taskId}`);
+
+  await update(taskRef, {
+    title: updatedTask.title,
+    description: updatedTask.description,
+    startDate: updatedTask.startDate,
+  });
+
+  getTasksByUser();
+  console.log("Task updated successfully!");
+}
+
+async function toggleArchiveTask(taskId, currentStatus) {
+  const taskRef = ref(database, `tasks/${taskId}`);
+
+  await update(taskRef, {
+    isArchive: !currentStatus,
+  });
+
+  getTasksByUser();
+  console.log("Task archive status toggled successfully!");
+}
+
 async function deleteTask(taskId) {
-    const taskRef = ref(database, `tasks/${taskId}`);
-    await set(taskRef, null);
-    getTasksByUser();
+  const taskRef = ref(database, `tasks/${taskId}`);
+  await set(taskRef, null);
+  getTasksByUser();
 }
 
 function displayTasks(userTasks) {
@@ -116,6 +149,10 @@ function displayTasks(userTasks) {
   taskGrid.innerHTML = "";
 
   userTasks.forEach((task, index) => {
+
+    if(task.isArchive){
+      return
+    }
     const card = document.createElement("div");
     card.className = `flex flex-col justify-between border rounded-lg p-4 text-white ${
       bgColors[Math.floor(Math.random() * bgColors.length)]
@@ -123,14 +160,24 @@ function displayTasks(userTasks) {
     card.id = task.taskId;
     const detailButtonId = `taskDetail-${task.taskId}`;
     const deleteButtonId = `taskDelete-${task.taskId}`;
+    const editButtonId = `taskEdit-${task.taskId}`;
+    const archiveButtonId = `taskArchive-${task.taskId}`;
 
     card.innerHTML = `
         <div class="flex-grow">
           <div class="flex justify-between">
             <h4 class="text-lg font-bold">${task.title}</h4>
-            <div id="${deleteButtonId}" class="text-red-500 cursor-pointer">
-              <i class="fa-solid fa-trash"></i>
-            </div>
+            <div class="flex gap-2">
+          <div id="${editButtonId}" class="text-blue-500 cursor-pointer">
+            <i class="fa-solid fa-edit"></i>
+          </div>
+          <div id="${archiveButtonId}" class="text-yellow-500 cursor-pointer">
+            <i class="fa-solid fa-box-archive"></i>
+          </div>
+          <div id="${deleteButtonId}" class="text-red-500 cursor-pointer">
+            <i class="fa-solid fa-trash"></i>
+          </div>
+        </div>
           </div>
           <p class="text-base text-gray-400 overflow-hidden text-ellipsis whitespace-normal line-clamp-3">
             ${task.description}
@@ -145,36 +192,60 @@ function displayTasks(userTasks) {
     taskGrid.appendChild(card);
 
     document.getElementById(detailButtonId).addEventListener("click", () => {
-        window.location.href = `taskdetail.html?taskId=${task.taskId}`;
+      window.location.href = `taskdetail.html?taskId=${task.taskId}`;
     });
     document.getElementById(deleteButtonId).addEventListener("click", () => {
-        deleteTask(task.taskId)
+      deleteTask(task.taskId);
+    });
+    document.getElementById(editButtonId).addEventListener("click", () => {
+      openEditModal(task);
+    });
+    document.getElementById(archiveButtonId).addEventListener("click", () => {
+      toggleArchiveTask(task.taskId, task.isArchive);
     });
   });
 }
 
-document.addEventListener("DOMContentLoaded", ()=>{
-    getTasksByUser();
-})
+function formatDateForInput(dateString) {
+  const date = new Date(dateString);
+  return date.toISOString().split("T")[0];
+}
 
-// description
-// :
-// "this will ensureseemless website creation of the myntra app."
-// endDate
-// :
-// "2024-11-22"
-// isArchive
-// :
-// false
-// startDate
-// :
-// "2024-11-14T20:05:16.112Z"
-// taskId
-// :
-// "-OBgGv-rrbE_P4JJI7ao"
-// title
-// :
-// "creation of html website"
-// userId
-// :
-// "0mIfj8HrDxV6xwEJrLJzvIDq7ev2"
+function openEditModal(task) {
+  const modal = document.getElementById("editTaskModal");
+
+
+  modal.querySelector("#taskTitle").value = task.title;
+  modal.querySelector("#taskDescription").value = task.description;
+  modal.querySelector("#taskStartDate").value = formatDateForInput(task.startDate);
+
+
+  modal.querySelector("#saveTaskButton").onclick = () => {
+    const updatedTask = {
+      taskId: task.taskId,
+      title: modal.querySelector("#taskTitle").value,
+      description: modal.querySelector("#taskDescription").value,
+      startDate: modal.querySelector("#taskStartDate").value,
+    };
+
+    updateTaskInFirebase(updatedTask);
+    modal.classList.add("hidden");
+  };
+
+  modal.classList.remove("hidden");
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  getTasksByUser();
+});
+document.getElementById("cancelEditButton").addEventListener("click", () => {
+  closeEditModal();
+});
+
+function closeEditModal() {
+  const modal = document.getElementById("editTaskModal");
+
+  modal.classList.add("hidden");
+}
+
