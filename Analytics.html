@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="h-screen bg-gray-100">
+    <div class="flex">
+      <!-- Sidebar -->
+      <div class="md:w-1/4 lg:relative sm:absolute w-0">
+        <side-bar class=""></side-bar>
+      </div>
+      <!-- Main Content Area -->
+      <div class="w-full">
+        <!-- Navbar -->
+        <div class="w-full bg-blue-500 text-white">
+          <sub-nav></sub-nav>
+        </div>
+        <!-- Main Content below Navbar -->
+        <div class="my-4 mx-5">
+          <div class="block border">
+            <h5 class="font-semibold text-xl">Your Tasks</h5>
+          </div>
+          <div
+            id="taskGrid"
+            class="grid gap-4 my-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1"
+          ></div>
+          <!-- Modal -->
+          <div
+            id="static-modal"
+            data-modal-backdrop="static"
+            tabindex="-1"
+            aria-hidden="true"
+            class="hidden fixed inset-0 z-50 justify-center items-center w-full h-full bg-black bg-opacity-50"
+          >
+            <div class="relative p-4 w-full max-w-2xl max-h-full mx-auto">
+              <!-- Modal content -->
+              <div
+                class="relative dark:text-[var(--text-color-light)] text-[var(--text-color-light)] dark:bg-[var(--background-color-light)] bg-[var(--background-color-dark)] rounded-lg shadow"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="./managers/sidebar.manager.js"></script>
+    <script type="module" src="./managers/subNav.manager.js"></script>
+    <script type="module" src="./js/analytics.js"></script>
+    <script src="./Theme.js"></script>
+  </body>
+  <script src="./Theme.js"></script>
+</html>
