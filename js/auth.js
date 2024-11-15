@@ -22,7 +22,6 @@ const idToken = localStorage.getItem("idToken");
 // Check if current user is login or not
 export function checkLoggedin() {
   // const idToken = localStorage.getItem("idToken");
-  console.log("called")
   if (!idToken || isTokenExpired(idToken)) {
     alert("Session expired. Please log in again.");
     localStorage.removeItem("idToken");
