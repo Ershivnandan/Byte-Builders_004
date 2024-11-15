@@ -1,18 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title id="HomePagetitle"></title>
+    <title id="HomePagetitle">Dashboard</title>
+    <link rel="shortcut icon" href="./logo.png" type="image/*">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-
     <link rel="stylesheet" href="./Global.css" />
-  </head>
-  <body>
-    <h1 class="bg-blue-600">this is index</h1>
-  </body>
+    <script src="https://kit.fontawesome.com/49b1f13654.js" crossorigin="anonymous"></script>
+</head>
+<body class="h-screen bg-gray-100">
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="md:w-1/4 lg:relative sm:absolute w-0">
+            <side-bar class=""></side-bar>
+        </div>
 
-  <script type="module" src="./js/home.js"></script>
-  <script src="./Theme.js"></script>
+        <!-- Main Content Area -->
+        <div class="w-full">
+            <!-- Navbar -->
+            <div class="w-full bg-blue-500 text-white">
+                <sub-nav></sub-nav>
+            </div>
+
+            <!-- Main Content below Navbar -->
+            <div>
+                <!-- Tumhara main content yahan aayega -->
+                <h1 class="text-2xl font-semibold">Welcome to Dashboard</h1>
+                <p>Your main content goes here.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script files -->
+    <script src="./managers/sidebar.manager.js"></script>
+    <script type="module" src="./managers/subNav.manager.js"></script>
+    <script type="module" src="./js/home.js"></script>
+    <script src="./Theme.js"></script>
+</body>
 </html>

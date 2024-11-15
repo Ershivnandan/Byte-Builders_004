@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="TaskPagetitle"></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="./logo.png" type="image/*">
+
+    <link rel="stylesheet" href="./Global.css" />
+    <script
+      src="https://kit.fontawesome.com/49b1f13654.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body class="h-screen bg-gray-100">
+    <div class="flex">
+      <!-- Sidebar -->
+      <div class="md:w-1/4 lg:relative sm:absolute w-0">
+        <side-bar class=""></side-bar>
+      </div>
+      <!-- Main Content Area -->
+      <div class="w-full">
+        <!-- Navbar -->
+        <div class="w-full bg-blue-500 text-white">
+          <sub-nav></sub-nav>
+        </div>
+        <!-- Main Content below Navbar -->
+        <div class="my-4 mx-5">
+          <div class="px-10 flex justify-end my-2">
+            <button
+              id="createTaskBtn"
+              type="button"
+              class="border font-semibold px-2 py-1 rounded-md shadow-md hover:scale-110 duration-200"
+            >
+              Create task
+            </button>
+          </div>
+          <div class="block border">
+            <h5 class="font-semibold text-xl">Your Tasks</h5>
+          </div>
+          <div
+          id="taskGrid"
+            class="grid gap-4 my-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1"
+          >
+            
+          </div>
+          <!-- Modal -->
+          <div
+            id="static-modal"
+            data-modal-backdrop="static"
+            tabindex="-1"
+            aria-hidden="true"
+            class="hidden fixed inset-0 z-50 justify-center items-center w-full h-full bg-black bg-opacity-50"
+          >
+            <div class="relative p-4 w-full max-w-2xl max-h-full mx-auto">
+              <!-- Modal content -->
+              <div
+                class="relative dark:text-[var(--text-color-light)] text-[var(--text-color-light)] dark:bg-[var(--background-color-light)] bg-[var(--background-color-dark)] rounded-lg shadow"
+              >
+                <!-- Modal header -->
+                <div
+                  class="flex items-center justify-between p-4 md:p-5 border-b rounded-t"
+                >
+                  <h3 class="text-xl font-semibold">Create Task</h3>
+                  <button
+                    type="button"
+                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                    data-modal-hide="static-modal"
+                  >
+                    <svg
+                      class="w-3 h-3"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 14 14"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                      />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                  </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-4 md:p-5 space-y-4">
+                  <form id="taskForm" class="space-y-4">
+                    <div>
+                      <label
+                        class="block dark:text-[var(--text-color-light)] text-[var(--text-color-dark)] font-medium"
+                        >Task Title</label
+                      >
+                      <input
+                        id="tTitle"
+                        type="text"
+                        name="taskTitle"
+                        class="w-full border rounded-md px-3 py-2"
+                        placeholder="Enter task title"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block dark:text-[var(--text-color-light)] text-[var(--text-color-dark)] font-medium"
+                        >Description</label
+                      >
+                      <textarea
+                        id="tDescription"
+                        name="description"
+                        class="w-full border rounded-md px-3 py-2"
+                        rows="3"
+                        placeholder="Enter task description"
+                        required
+                      ></textarea>
+                    </div>
+
+                    <div>
+                      <label
+                        class="block dark:text-[var(--text-color-light)] text-[var(--text-color-dark)] font-medium"
+                        >End Date</label
+                      >
+                      <input
+                        id="tEnddate"
+                        type="date"
+                        name="endDate"
+                        class="w-full border rounded-md px-3 py-2"
+                        required
+                      />
+                    </div>
+                  </form>
+                </div>
+                <!-- Modal footer -->
+                <div
+                  class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b"
+                >
+                  <button
+                    type="submit"
+                    form="taskForm"
+                    class="dark:text-[var(--text-color-light)] text-[var(--text-color-dark)] bg-blue-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  >
+                    Save Task
+                  </button>
+                  <button
+                    type="button"
+                    class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 bg-gray-600 rounded-lg"
+                    data-modal-hide="static-modal"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="editTaskModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
+            <div class="bg-white rounded-lg w-96 p-6">
+              <h3 class="text-lg font-bold mb-4">Edit Task</h3>
+              
+              <!-- Title Field -->
+              <label class="block mb-2 text-sm font-medium">Title</label>
+              <input id="taskTitle" type="text" class="w-full mb-4 border rounded-lg p-2" />
+          
+              <!-- Description Field -->
+              <label class="block mb-2 text-sm font-medium">Description</label>
+              <textarea id="taskDescription" rows="4" class="w-full mb-4 border rounded-lg p-2"></textarea>
+          
+              <!-- Start Date Field -->
+              <label class="block mb-2 text-sm font-medium">Start Date</label>
+              <input id="taskStartDate" type="date" class="w-full mb-4 border rounded-lg p-2" />
+          
+              <!-- Action Buttons -->
+              <div class="flex justify-end gap-2">
+                <button id="cancelEditButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg">Cancel</button>
+                <button id="saveTaskButton" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Save</button>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <script src="./managers/sidebar.manager.js"></script>
+    <script type="module" src="./managers/subNav.manager.js"></script>
+    <script type="module" src="./js/task.js"></script>
+    <script src="./Theme.js"></script>
+  </body>
+</html>
