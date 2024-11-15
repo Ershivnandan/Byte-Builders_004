@@ -7,12 +7,14 @@ if (savedTheme === "dark-mode") {
   themeToggle.checked = true;
 }
 
-themeToggle.addEventListener("change", () => {
-  if (themeToggle.checked) {
-    body.classList.add("dark-mode");
-    localStorage.setItem("theme", "dark-mode");
-  } else {
-    body.classList.remove("dark-mode");
-    localStorage.setItem("theme", "light-mode");
-  }
-});
+if(themeToggle){
+  themeToggle.addEventListener("change", () => {
+    if (themeToggle.checked) {
+      body.classList.add("dark-mode");
+      localStorage.setItem("theme", "dark-mode");
+    } else {
+      body.classList.remove("dark-mode");
+      localStorage.setItem("theme", "light-mode");
+    }
+  });
+}

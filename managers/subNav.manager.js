@@ -1,11 +1,11 @@
 
 import { signOutUser, getUserProfile } from '../js/auth.js'; 
 
+
 class subnavManager extends HTMLElement {
   connectedCallback() {
     const userProfile = getUserProfile(); 
-
-    const userImage = userProfile.photoURL || "https://dummyjson.com/image/150";
+    const userImage = userProfile.photoURL;
     const userName = userProfile.displayName || "GOAT";
 
     const routes = [
@@ -14,6 +14,7 @@ class subnavManager extends HTMLElement {
       { name: "Calendar", url: "calendar.html" },
       { name: "Music", url: "music.html" },
       { name: "Analytics", url: "analytics.html" },
+      { name: "Task Goals", url: "taskdetail.html" },
     ];
 
     const currentPage = window.location.href;
@@ -21,7 +22,7 @@ class subnavManager extends HTMLElement {
     const headingText = currentRoute ? currentRoute.name : "Your Website";
 
     this.innerHTML = `
-        <nav class="p-4 shadow-md border">
+        <nav class="p-4 shadow-md">
           <div class="flex items-center justify-between">
             <!-- Heading on the left -->
             <div class="text-xl font-semibold">${headingText}</div>
@@ -37,7 +38,7 @@ class subnavManager extends HTMLElement {
               >
                 <span class="sr-only">Open user menu</span>
                 <img
-                  class="w-8 h-8 rounded-full"
+                  class="w-8 h-8 rounded-full shadow shadow-white-500/50"
                   src="${userImage}"
                   alt="user photo"
                 />
@@ -48,11 +49,11 @@ class subnavManager extends HTMLElement {
                 class="z-50 hidden my-4 text-base list-none dropdown divide-y divide-gray-100 rounded-lg shadow absolute right-0"
                 id="user-dropdown"
               >
-                <div class="px-4 py-3">
+                <div class="px-4 w-[12vw] py-3">
                   <span class="block text-sm">${userName}</span>
                   <span class="block text-sm truncate">${userProfile.email}</span>
                 </div>
-                <ul class="py-2" aria-labelledby="user-menu-button">
+                <ul class="py-2" w-[12vw] aria-labelledby="user-menu-button">
                   <li>
                     <a
                       href="#"
@@ -73,18 +74,18 @@ class subnavManager extends HTMLElement {
         </nav>
       `;
 
-    // Add the event listener for sign-out
+    
     document.getElementById("signout-button").addEventListener("click", () => {
-      signOutUser(); // This will call the updated signOutUser from auth.js
+      signOutUser();
     });
 
-    // Dropdown toggle logic
+
     window.toggleDropdown = () => {
       const dropdown = document.getElementById("user-dropdown");
       dropdown.classList.toggle("hidden");
     };
 
-    // Close dropdown if clicked outside
+    
     window.addEventListener("click", function (event) {
       const dropdown = document.getElementById("user-dropdown");
       const button = document.getElementById("user-menu-button");
