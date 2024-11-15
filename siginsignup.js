@@ -4,11 +4,15 @@ const signUpButton = document.getElementById('signUp');
 const signInButton = document.getElementById('signIn');
 const container = document.getElementById('container');
 const googleSignup = document.getElementById("googleSignup");
+const googleSignin = document.getElementById("googleSignin");
 import { fetchLogindetails, googleLogin, registerUser } from "./js/auth.js";
 
 
 
 googleSignup.addEventListener("click", ()=>{
+	googleLogin();
+})
+googleSignin.addEventListener("click", ()=>{
 	googleLogin();
 })
 

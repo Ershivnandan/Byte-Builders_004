@@ -12,6 +12,32 @@ const urlParams = new URLSearchParams(window.location.search);
 const taskId = urlParams.get("taskId");
 const goalForm = document.getElementById("goalForm");
 
+let debounceTimeout = null;
+
+function toggleStatus(goalId, currentStatus) {
+  if (debounceTimeout) clearTimeout(debounceTimeout);
+  debounceTimeout = setTimeout(() => {
+    const nextStatus = (currentStatus + 1) % 3;
+    
+    updateGoalStatus(goalId, nextStatus);
+  }, 300);
+}
+
+
+function updateGoalStatus(goalId, status) {
+  const goalRef = ref(database, `goals/${goalId}`);
+  
+
+  update(goalRef, { status })
+    .then(() => {
+      console.log("Goal status updated successfully!");
+      fetchTaskGoals(taskId);
+    })
+    .catch((error) => {
+      console.error("Error updating goal status:", error);
+    });
+}
+
 const taskDetail = document.getElementById("taskDetail");
 taskDetail.innerText = "Task details";
 
@@ -32,14 +58,14 @@ closeModalButtons.forEach((button) => {
   button.addEventListener("click", closeModal);
 });
 
-// Check if taskId is present
+
 if (taskId) {
   fetchTaskGoals(taskId);
 } else {
   console.log("No task ID found in the URL");
 }
 
-function fetchTaskGoals(taskId) {
+export function fetchTaskGoals(taskId) {
   const goalsRef = ref(database, `goals`);
 
   get(goalsRef)
@@ -65,54 +91,71 @@ function fetchTaskGoals(taskId) {
     });
 }
 
-// Function to display goals on the page
+
 function displayGoals(goals) {
   const goalsContainer = document.getElementById("goalsContainer");
-  goalsContainer.innerHTML = ""; 
+  goalsContainer.innerHTML = "";
 
   goals.forEach((goal) => {
     const goalElement = document.createElement("tr");
-    goalElement.className =
-      " border-b ";
+    goalElement.className = " border-b ";
 
     const goalDetails = `
-                <th scope="row" class="px-6 py-4 font-medium text-center">
-                    ${goal.title}
-                </th>
-                <td class="px-6 py-4 text-center">
-                    ${goal.description}
-                </td>
-                <td class="px-6 py-4 text-center">
-                    ${goal.startDate}
-                </td>
-                <td class="px-6 py-4 text-center">
-                    ${goal.startTime}
-                </td>
-                <td class="px-6 py-4 text-center">
-                    ${goal.endDate}
-                </td>
-                <td class="px-6 py-4 text-center">
-                    ${goal.endTime}
-                </td>
-                <td class="px-6 py-4 text-right text-center">
-                    <a href="#" class="font-medium ${goal.status === 0 ? "text-red-500" : goal.status === 1 ? "text-blue-500" : "text-green-500" }">${goal.status === 0 ? "Todo" : goal.status === 1 ? "Progress" : "Completed" }</a>
-                </td>
-                <td class="px-6 py-4 text-sm text-right text-yellow-600 text-center">
-                   <i class="fa-solid fa-pen-to-square  cursor-pointer hover:scale-125 duration-200"></i>
-                </td>
-                <td class="px-6 py-4 text-sm text-right text-blue-500 text-center">
-                    <i class="fa-solid fa-box-archive cursor-pointer hover:scale-125 duration-200"></i>
-                </td>
-                <td class="px-6 py-4 text-sm text-red-500 text-right text-center">
-                    <i class="fa-solid fa-trash cursor-pointer hover:scale-125 duration-200"></i>
-                </td>
-          
-      `;
+      <th scope="row" class="px-6 py-4 font-medium text-center">
+        ${goal.title}
+      </th>
+      <td class="px-6 py-4 text-center">
+        ${goal.description}
+      </td>
+      <td class="px-6 py-4 text-center">
+        ${goal.startDate}
+      </td>
+      <td class="px-6 py-4 text-center">
+        ${goal.startTime}
+      </td>
+      <td class="px-6 py-4 text-center">
+        ${goal.endDate}
+      </td>
+      <td class="px-6 py-4 text-center">
+        ${goal.endTime}
+      </td>
+      <td class="px-6 py-4 text-center">
+        <a href="#" class="font-medium ${goal.status === 0 ? 'text-red-500' : goal.status === 1 ? 'text-blue-500' : 'text-green-500'}">
+          ${goal.status === 0 ? 'Todo' : goal.status === 1 ? 'Progress' : 'Completed'}
+        </a>
+      </td>
+      <td class="px-6 py-4 text-sm text-right text-yellow-600 text-center">
+        <i class="fa-solid fa-pen-to-square cursor-pointer hover:scale-125 duration-200"></i>
+      </td>
+      <td class="px-6 py-4 text-sm text-right text-blue-500 text-center">
+        <i class="fa-solid fa-box-archive cursor-pointer hover:scale-125 duration-200"></i>
+      </td>
+      <td class="px-6 py-4 text-sm text-red-500 text-right text-center">
+        <i class="fa-solid fa-trash cursor-pointer hover:scale-125 duration-200"></i>
+      </td>
+    `;
 
     goalElement.innerHTML = goalDetails;
-
-    // Append goal to the container
     goalsContainer.appendChild(goalElement);
+
+  
+    const statusLink = goalElement.querySelector("a");
+    statusLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      toggleStatus(goal.goalId, goal.status);
+    });
+
+    goalElement.querySelector(".fa-pen-to-square").addEventListener("click", () => {
+      openEditGoalModal(goal);
+    });
+
+    goalElement.querySelector(".fa-box-archive").addEventListener("click", () => {
+      archiveGoal(goal.goalId);
+    });
+
+    goalElement.querySelector(".fa-trash").addEventListener("click", () => {
+      deleteGoal(goal.goalId);
+    });
   });
 }
 
@@ -180,5 +223,71 @@ function addGoalToTask(taskId, goalData) {
     })
     .catch((error) => {
       console.error("Error adding goal:", error);
+    });
+}
+
+function openEditGoalModal(goal) {
+  const modal = document.getElementById("goal-modal");
+  modal.classList.remove("hidden");
+
+  document.getElementById("gTitle").value = goal.title;
+  document.getElementById("gDescription").value = goal.description;
+  document.getElementById("gStartdate").value = goal.startDate;
+  document.getElementById("gStarttime").value = goal.startTime;
+  document.getElementById("gEnddate").value = goal.endDate;
+  document.getElementById("gEndtime").value = goal.endTime;
+
+  document.getElementById("goalForm").onsubmit = (e) => {
+    e.preventDefault();
+    updateGoal(goal.goalId);
+    closeModal();
+  };
+}
+
+function updateGoal(goalId) {
+  const updatedGoalData = {
+    title: document.getElementById("gTitle").value,
+    description: document.getElementById("gDescription").value,
+    startDate: document.getElementById("gStartdate").value,
+    startTime: document.getElementById("gStarttime").value,
+    endDate: document.getElementById("gEnddate").value,
+    endTime: document.getElementById("gEndtime").value,
+    status: 1,
+  };
+
+  const goalRef = ref(database, `goals/${goalId}`);
+  set(goalRef, updatedGoalData)
+    .then(() => {
+      console.log("Goal updated successfully!");
+      fetchTaskGoals(taskId);
+    })
+    .catch((error) => {
+      console.error("Error updating goal:", error);
+    });
+}
+
+function archiveGoal(goalId) {
+  const goalRef = ref(database, `goals/${goalId}`);
+
+  update(goalRef, { isArchive: true })
+    .then(() => {
+      console.log("Goal archived successfully!");
+      fetchTaskGoals(taskId);
+    })
+    .catch((error) => {
+      console.error("Error archiving goal:", error);
+    });
+}
+
+function deleteGoal(goalId) {
+  const goalRef = ref(database, `goals/${goalId}`);
+
+  set(goalRef, null)
+    .then(() => {
+      console.log("Goal deleted successfully!");
+      fetchTaskGoals(taskId);
+    })
+    .catch((error) => {
+      console.error("Error deleting goal:", error);
     });
 }
