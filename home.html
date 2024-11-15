@@ -3,17 +3,184 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title id="HomePagetitle"></title>
+    <title id="HomePagetitle">Dashboard</title>
+    <link rel="shortcut icon" href="./logo.png" type="image/*" />
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-
     <link rel="stylesheet" href="./Global.css" />
+    <script
+      src="https://kit.fontawesome.com/49b1f13654.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
-  <body>
+  <body class="h-screen bg-gray-100">
+    <div class="flex">
+      <!-- Sidebar -->
+      <div class="md:w-1/4 lg:relative sm:absolute w-0">
+        <side-bar class=""></side-bar>
+      </div>
 
-    <side-bar></side-bar>
+      <!-- Main Content Area -->
+      <div class="w-full">
+        <!-- Navbar -->
+        <div class="w-full bg-blue-500 text-white">
+          <sub-nav></sub-nav>
+        </div>
+
+        <!-- Main Content below Navbar -->
+        <div class="py-4 px-4" style="background: linear-gradient(180deg, rgba(238,122,5,0.978) 0%, rgba(255,255,255,1) 81%);">
+          <div class="px-10 flex justify-end my-2 gap-4">
+            <button
+              id="createTaskBtn"
+              type="button"
+              class="border border-black font-semibold px-2 py-1 rounded-md shadow-md hover:scale-110 duration-200"
+            >
+              Create Team
+            </button>
+            <button
+              id="createTaskBtn"
+              type="button"
+              class="border border-black font-semibold px-2 py-1 rounded-md shadow-md hover:scale-110 duration-200"
+            >
+              Join Team
+            </button>
+          </div>
+          <div
+            class="flex justify-center items-center flex-col gap-2 text-3xl font-bold py-4"
+          >
+            <h3 class="text-lg">Date Of today</h3>
+            <p>Good Morning Shiv</p>
+          </div>
+          <div class="flex justify-center">
+            <div
+              class="relative flex md:flex-row flex-col justify-between px-4 items-center gap-2 border border-black py-1 md:rounded-full rounded-md md:w-1/2 w-[70%] mt-4"
+            >
+              <!-- Dropdown menu -->
+              <div class="">
+                <button
+                  id="dropdownDefaultButton"
+                  class="font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
+                  type="button"
+                >
+                  This Week
+                  <svg
+                    class="w-2.5 h-2.5 ms-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 10 6"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m1 1 4 4 4-4"
+                    />
+                  </svg>
+                </button>
+
+                <!-- Dropdown menu -->
+                <div
+                  id="dropdown"
+                  class="z-10 hidden absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+                >
+                  <ul class="py-2 text-sm text-gray-700">
+                    <li>
+                      <a href="#" class="block px-4 py-2 hover:bg-gray-100">
+                        This Week
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="block px-4 py-2 hover:bg-gray-100">
+                        This Month
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="relative font-medium">
+                <p>
+                  <span class="text-2xl">0</span>
+                  <span>Task Completed</span>
+                </p>
+              </div>
+              <div class="relative font-medium">
+                <p>
+                  <span class="text-2xl">0</span>
+                  <span>Collaboration</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="my-5 flex flex-col md:flex-row justify-between border border-black rounded-md shadow-lg shadow-black-500/50"
+          >
+            <div class=" w-full p-4">
+              <ul class="max-w-md space-y-3 text-gray-500 list-inside">
+                <li
+                  class="flex items-center border border-gray-600 py-2 rounded-lg hover:scale-105 duration-200 px-2"
+                >
+                  <i class="fa-solid fa-circle-check text-green-500 me-2"></i>
+                  At least 10 characters
+                </li>
+                <li
+                  class="flex items-center border border-gray-600 py-2 rounded-lg hover:scale-105 duration-200 px-2"
+                >
+                  <i class="fa-solid fa-circle-check text-green-500 me-2"></i>
+                  At least one lowercase character
+                </li>
+                <li
+                  class="flex items-center border border-gray-600 py-2 rounded-lg hover:scale-105 duration-200 px-2"
+                >
+                  <i class="fa-solid fa-circle-check text-gray-500 me-2"></i>
+                  At least one special character, e.g., ! @ # ?
+                </li>
+                <li
+                  class="flex items-center border border-gray-600 py-2 rounded-lg hover:scale-105 duration-200 px-2"
+                >
+                  <i class="fa-solid fa-circle-check text-green-500 me-2"></i>
+                  At least one lowercase character
+                </li>
+                <li
+                  class="flex items-center border border-gray-600 py-2 rounded-lg hover:scale-105 duration-200 px-2"
+                >
+                  <i class="fa-solid fa-circle-check text-gray-500 me-2"></i>
+                  At least one special character, e.g., ! @ # ?
+                </li>
+              </ul>
+            </div>
+            <div
+              class="border-l border-black w-full p-4 flex md:flex-row flex-col justify-center gap-5 items-center"
+            >
+              <div>
+                <img
+                  class="md:w-[15vw] w-[50vw]"
+                  src="https://i.ibb.co/zfD2nyp/Saas.jpg"
+                  alt="image"
+                />
+              </div>
+              <div>
+                <button
+                  id="createTaskBtn"
+                  type="button"
+                  class="border border-black font-semibold px-2 py-1 rounded-md shadow-md hover:scale-110 duration-200"
+                >
+                  Create Team
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Script files -->
+    <script src="./managers/sidebar.manager.js"></script>
+    <script type="module" src="./managers/subNav.manager.js"></script>
+    <script type="module" src="./js/home.js"></script>
+    <script src="./Theme.js"></script>
   </body>
-  <script src="./managers/sidebar.manager.js"></script>
-  <script type="module" src="./js/home.js"></script>
-  <script src="./Theme.js"></script>
 </html>
