@@ -291,3 +291,39 @@ function deleteGoal(goalId) {
       console.error("Error deleting goal:", error);
     });
 }
+
+
+// Function to fetch tasks for the logged-in user
+export function fetchUserTasks() {
+  const userId = auth.currentUser.uid;
+  const tasksRef = ref(database, `tasks`);
+
+  get(tasksRef)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        const tasks = snapshot.val();
+        const userTasks = {};
+
+        Object.entries(tasks).forEach(([taskId, task]) => {
+          if (task.userId === userId) {
+            const taskDate = task.date; // Ensure this is formatted as "YYYY-MM-DD"
+            if (!userTasks[taskDate]) userTasks[taskDate] = [];
+            userTasks[taskDate].push(task.name); // Assuming task has a name property
+          }
+        });
+
+        // Pass the user tasks to the calendar.js file
+        updateCalendarTasks(userTasks); // You may need to adjust this function in calendar.js
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching user tasks:", error);
+    });
+}
+
+// Call fetchUserTasks when the page is loaded
+document.addEventListener("DOMContentLoaded", () => {
+  if (auth.currentUser) {
+    fetchUserTasks(); // Fetch tasks for the logged-in user when the page loads
+  }
+});

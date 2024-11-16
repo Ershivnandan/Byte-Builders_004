@@ -1,159 +1,111 @@
-// Initialize the Google API client
-function handleClientLoad() {
-    gapi.load("client:auth2", initClient);
+let userTasks = {}; // This will hold tasks by date
+
+// This function will be called from taskDetails.js to update tasks
+function updateCalendarTasks(tasks) {
+  userTasks = tasks; // Update the global user tasks
+  renderCalendar(); // Re-render the calendar with updated tasks
 }
 
+const currentMonth = document.querySelector(".current-month");
+const calendarDays = document.querySelector(".calendar-days");
 
-// Initialize the API client with OAuth credentials
-function initClient() {
-    gapi.client.init({
-        clientId: '487267607352-hrk6ijqi5rfpsppucas549uadesrk6v7.apps.googleusercontent.com', // Your client ID
-        discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
-        scope: "https://www.googleapis.com/auth/calendar.readonly"
-    }).then(() => {
-        console.log("Google API client initialized.");
-        
-        const authInstance = gapi.auth2.getAuthInstance();
-        if (authInstance) {
-            if (authInstance.isSignedIn.get()) {
-                listUpcomingEvents();  // Fetch events if signed in
-            } else {
-                console.log("User not signed in, prompting sign-in...");
-            }
-        } else {
-            console.error("gapi.auth2 instance not found.");
-        }
-    }).catch((error) => {
-        console.error("Error initializing Google API client", error);
-    });
-}
+const today = new Date();
+let date = new Date();
 
+currentMonth.textContent = date.toLocaleDateString("en-US", {
+  month: "long",
+  year: "numeric",
+});
+today.setHours(0, 0, 0, 0);
 
-// Sign In function
-// function signIn() {
-//     gapi.auth2.getAuthInstance().signIn().then(() => {
-//         console.log("User signed in.");
-//         listUpcomingEvents();  // Fetch and display events once signed in
-//     }).catch((error) => {
-//         console.error("Error signing in", error);
-//     });
-// }
-function signIn() {
-    const authInstance = gapi.auth2.getAuthInstance();
-    if (authInstance.isSignedIn.get()) {
-        listUpcomingEvents();  // If already signed in, fetch events
+renderCalendar();
+
+function renderCalendar() {
+  const prevLastDay = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
+  const totalMonthDay = new Date(
+    date.getFullYear(),
+    date.getMonth() + 1,
+    0
+  ).getDate();
+  const startWeekDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+
+  calendarDays.innerHTML = "";
+
+  const totalCalendarDay = 6 * 7;
+  for (let i = 0; i < totalCalendarDay; i++) {
+    const day = i - startWeekDay + 1;
+    const fullDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      day
+    ).toISOString().split("T")[0];
+
+    if (i < startWeekDay) {
+      calendarDays.innerHTML += `<div class="text-gray-400 text-sm">${prevLastDay - startWeekDay + i + 1}</div>`;
+    } else if (i < startWeekDay + totalMonthDay) {
+      const isToday = today.toISOString().split("T")[0] === fullDate;
+      const hasTasks = userTasks[fullDate];
+
+      calendarDays.innerHTML += ` 
+        <div class="${
+          isToday ? "bg-orange-500 text-white" : "bg-gray-100"
+        } ${
+        hasTasks ? "border-2 border-orange-500" : "border"
+      } text-center p-2 rounded shadow-sm cursor-pointer transition hover:scale-105 text-sm" style="height: 100px;">
+          <span class="block font-bold">${day}</span>
+          ${
+            hasTasks
+              ? `<ul class="text-xs mt-2 text-orange-600">${userTasks[fullDate]
+                  .map((task) => `<li>${task}</li>`)
+                  .join("")}</ul>` 
+              : ""
+          }
+        </div>`;
     } else {
-        authInstance.signIn().then(() => {
-            console.log("User signed in.");
-            listUpcomingEvents();  // Fetch events after sign-in
-        }).catch((error) => {
-            console.error("Error signing in", error);
-        });
+      calendarDays.innerHTML += `<div class="text-gray-400 text-sm">${i - startWeekDay - totalMonthDay + 1}</div>`;
     }
+  }
 }
 
-// Sign Out function
-// function signOut() {
-//     gapi.auth2.getAuthInstance().signOut().then(() => {
-//         console.log("User signed out.");
-//         document.getElementById("events-list").innerHTML = '';  // Clear events after sign-out
-//     }).catch((error) => {
-//         console.error("Error signing out", error);
-//     });
-// }
-function signOut() {
-    const authInstance = gapi.auth2.getAuthInstance();
-    if (authInstance) {
-        authInstance.signOut().then(() => {
-            console.log("User signed out.");
-            document.getElementById("events-list").innerHTML = '';  // Clear events after sign-out
-        }).catch((error) => {
-            console.error("Error signing out", error);
-        });
-    } else {
-        console.error("No auth instance found.");
-    }
-}
-
-// Fetch and list the upcoming events from the user's Google Calendar
-// function listUpcomingEvents() {
-//     const authInstance = gapi.auth2.getAuthInstance();
-//     if (!authInstance.isSignedIn.get()) {
-//         console.log("User is not signed in.");
-//         signIn();  // Prompt the user to sign in
-//         return;
-//     }
-    
-//     gapi.client.calendar.events.list({
-//         'calendarId': 'primary',
-//         'timeMin': (new Date()).toISOString(),
-//         'showDeleted': false,
-//         'singleEvents': true,
-//         'maxResults': 10,
-//         'orderBy': 'startTime'
-//     }).then(function(response) {
-//         const events = response.result.items;
-//         const eventsList = document.getElementById("events-list");
-//         eventsList.innerHTML = ''; // Clear previous events
-
-//         if (events.length > 0) {
-//             events.forEach(function(event) {
-//                 const when = event.start.dateTime || event.start.date; // Handle all-day events
-//                 const eventItem = document.createElement("li");
-//                 eventItem.classList.add("p-4", "bg-gray-100", "rounded-lg", "shadow-md");
-//                 eventItem.innerHTML = `
-//                     <strong class="text-lg">${event.summary}</strong><br>
-//                     <span class="text-gray-600">${when}</span>
-//                 `;
-//                 eventsList.appendChild(eventItem);
-//             });
-//         } else {
-//             eventsList.innerHTML = "<li>No upcoming events found.</li>";
-//         }
-//     }).catch(function(error) {
-//         console.error("Error fetching events", error);
-//     });
-// }
-function listUpcomingEvents() {
-    const authInstance = gapi.auth2.getAuthInstance();
-    if (!authInstance.isSignedIn.get()) {
-        console.log("User is not signed in.");
-        signIn();  // Prompt user to sign in
-        return;
+// Event listeners for navigating months
+document.querySelectorAll(".month-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    // Check if the clicked button is for the previous or next month
+    if (btn.classList.contains("prev-month")) {
+      date.setMonth(date.getMonth() - 1); // Decrease month by 1 for prev month
+    } else if (btn.classList.contains("next-month")) {
+      date.setMonth(date.getMonth() + 1); // Increase month by 1 for next month
     }
 
-    gapi.client.calendar.events.list({
-        'calendarId': 'primary',
-        'timeMin': (new Date()).toISOString(),
-        'showDeleted': false,
-        'singleEvents': true,
-        'maxResults': 10,
-        'orderBy': 'startTime'
-    }).then(function(response) {
-        const events = response.result.items;
-        const eventsList = document.getElementById("events-list");
-        eventsList.innerHTML = ''; // Clear previous events
-
-        if (events.length > 0) {
-            events.forEach(function(event) {
-                const when = event.start.dateTime || event.start.date; // Handle all-day events
-                const eventItem = document.createElement("li");
-                eventItem.classList.add("p-4", "bg-gray-100", "rounded-lg", "shadow-md");
-                eventItem.innerHTML = `
-                    <strong class="text-lg">${event.summary}</strong><br>
-                    <span class="text-gray-600">${when}</span>
-                `;
-                eventsList.appendChild(eventItem);
-            });
-        } else {
-            eventsList.innerHTML = "<li>No upcoming events found.</li>";
-        }
-    }).catch(function(error) {
-        console.error("Error fetching events", error);
+    // Update the current month and year text
+    currentMonth.textContent = date.toLocaleDateString("en-US", {
+      month: "long",
+      year: "numeric",
     });
-}
 
+    // Re-render the calendar with the updated date
+    renderCalendar();
+  });
+});
 
-window.onload = function() {
-    handleClientLoad();
-};
+// Event listeners for navigating years
+document.querySelectorAll(".btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    if (btn.classList.contains("today")) {
+      date = new Date();
+    } else if (btn.classList.contains("prev-year")) {
+      date.setFullYear(date.getFullYear() - 1); // Decrease year by 1
+    } else if (btn.classList.contains("next-year")) {
+      date.setFullYear(date.getFullYear() + 1); // Increase year by 1
+    }
+
+    // Update the current month and year text
+    currentMonth.textContent = date.toLocaleDateString("en-US", {
+      month: "long",
+      year: "numeric",
+    });
+
+    // Re-render the calendar with the updated date
+    renderCalendar();
+  });
+});
