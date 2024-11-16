@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Calendar</title>
+    <link rel="shortcut icon" href="./logo.png" type="image/*">
+    <script src="https://apis.google.com/js/api.js" defer></script>
+    <script src="calendar.js" defer></script> <!-- Your custom JavaScript -->
+    <script src="main.min.js" type="module" defer></script>
+
+    <!-- FullCalendar CSS and JS -->
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/main.min.js"></script>
+
+    <!-- Tailwind CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6" onload="handleClientLoad()">
+    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
+        <h1 class="text-2xl font-bold mb-4 text-center">Google Calendar - Task Manager</h1>
+
+        <!-- Sign In / Sign Out Buttons -->
+        <div class="flex justify-center space-x-4 mb-4">
+            <button onclick="signIn()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Sign In with Google
+            </button>
+            <button onclick="signOut()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                Sign Out
+            </button>
+        </div>
+
+        <!-- Show Google Calendar Events Button -->
+        <div class="flex justify-center mb-6">
+            <button onclick="listUpcomingEvents()" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                Show My Google Calendar Events
+            </button>
+        </div>
+
+        <!-- FullCalendar UI -->
+        <div id="calendar" class="w-full h-96"></div>
+
+        <!-- List of Events (if needed) -->
+        <ul id="events-list" class="space-y-4 mt-6"></ul>
+    </div>
+</body>
+</html>
