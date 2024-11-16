@@ -1,11 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Player</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --primary-color: rgba(238, 100, 5, 0.978);
+    }
+  </style>
 </head>
-<body>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad tempore ratione itaque similique nihil numquam doloremque magni ut necessitatibus exercitationem, pariatur voluptatum placeat ullam consequatur dolorum repellendus iusto unde ab rerum est ipsum odit. In est sunt aliquid dolore ullam magnam? Tempore voluptas autem blanditiis officia minus. Iste, hic quasi!
+
+<body class="bg-gray-100 text-gray-900 font-sans">
+  <!-- Navbar -->
+  <nav class="bg-[var(--primary-color)] text-white p-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold">🎵 My Music App</h1>
+      <button id="loginButton" class="bg-white text-[var(--primary-color)] px-4 py-2 rounded hover:bg-gray-100">
+        Login with Spotify
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Section -->
+  <main class="container mx-auto py-8">
+    <h2 class="text-2xl font-bold text-center mb-6">Discover & Play Your Favorite Tracks</h2>
+    <div class="flex justify-center mb-6">
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search for a song..."
+        class="w-full md:w-2/3 p-2 border rounded"
+      />
+      <button
+        id="searchButton"
+        class="ml-4 bg-[var(--primary-color)] text-white px-4 py-2 rounded hover:bg-orange-600"
+      >
+        Search
+      </button>
+    </div>
+    <div id="trackList" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Tracks will be dynamically added here -->
+    </div>
+  </main>
+  
+
+  <!-- Player -->
+  <footer class="fixed bottom-0 w-full bg-[var(--primary-color)] text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <audio id="audioPlayer" class="hidden"></audio>
+      <div class="space-x-4">
+      </div>
+    </div>
+  </footer>
+  
+
+  <script src="music.js" type="module"></script>
 </body>
+
 </html>

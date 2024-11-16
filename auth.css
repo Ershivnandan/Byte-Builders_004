@@ -38,7 +38,7 @@ span {
 }
 
 a {
-	color: #333;
+	color: #000;
 	font-size: 14px;
 	text-decoration: none;
 	margin: 15px 0;
@@ -46,8 +46,8 @@ a {
 
 button {
 	border-radius: 20px;
-	border: 1px solid #3c898b;
-	background-color: #24939bd8;
+	border: 1px solid #000;
+	background-color: rgba(238, 100, 5, 0.978);
 	color: #FFFFFF;
 	font-size: 12px;
 	font-weight: bold;
@@ -87,6 +87,12 @@ input {
 	padding: 12px 15px;
 	margin: 8px 0;
 	width: 100%;
+}
+
+/* default Input outline and shadow removed */
+input:focus {
+    outline: none;
+    box-shadow: none;
 }
 
 .container {
@@ -160,9 +166,9 @@ input {
 }
 
 .overlay {
-	background: #04eeeec3;
-	background: -webkit-linear-gradient(to right, #7ff5f7,  #13b0bcd8);
-	background: linear-gradient(to right,  #7ff5f7,  #13b0bcd8);
+	background: rgba(238, 122, 5, 0.978);
+	background: -webkit-linear-gradient(to right, rgba(238, 100, 5, 0.978),  rgba(238, 122, 5, 0.978));
+	background: linear-gradient(to right,  rgba(238, 100, 5, 0.978),  rgba(238, 122, 5, 0.978));
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: 0 0;
