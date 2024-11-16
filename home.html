@@ -40,8 +40,10 @@
           "
         >
           <div class="px-5 flex justify-center my-2 gap-4">
-            <div class="w-[80%] relative flex justify-center items-center relative">
-              <div class="flex w-full justify-center  gap-4">
+            <div
+              class="w-[80%] relative flex justify-center items-center relative"
+            >
+              <div class="flex w-full justify-center gap-4">
                 <div class="w-full relative flex justify-center items-center">
                   <input
                     type="text"
@@ -58,7 +60,10 @@
                   </span>
                 </div>
               </div>
-              <div id="teamsList" class="absolute bg-gray-900 rounded-lg top-7 mt-10 w-full flex justify-center mt-4"></div>
+              <div
+                id="teamsList"
+                class="absolute bg-gray-900 rounded-lg top-7 mt-10 w-full flex justify-center mt-4"
+              ></div>
             </div>
             <button
               id="createTeamBtn"
@@ -67,9 +72,7 @@
             >
               Create Team
             </button>
-            <div id="teamIconContainer">
-
-            </div>
+            <div id="teamIconContainer"></div>
           </div>
           <div
             class="flex justify-center items-center flex-col gap-2 text-3xl font-bold py-4"
@@ -143,32 +146,33 @@
           <div
             class="my-5 flex flex-col md:flex-row justify-between border border-black rounded-md shadow-lg shadow-black-500/50"
           >
-            <div  class="w-full p-4">
-              <ul id="topGoalsContainer" class="max-w-md space-y-3 text-gray-500 list-inside">
-                
-              </ul>
+            <div class="w-full p-4">
+              <ul
+                id="topGoalsContainer"
+                class="max-w-md space-y-3 text-gray-500 list-inside"
+              ></ul>
             </div>
             <div class="w-full border-l border-black flex justify-center">
-                <div
-              class=" w-full p-4 flex md:flex-row flex-col justify-center gap-5 items-center"
-            >
-              <div>
-                <img
-                  class="md:w-[15vw] w-[50vw]"
-                  src="https://i.ibb.co/zfD2nyp/Saas.jpg"
-                  alt="image"
-                />
+              <div
+                class="w-full p-4 flex md:flex-row flex-col justify-center gap-5 items-center"
+              >
+                <div>
+                  <img
+                    class="md:w-[15vw] w-[50vw]"
+                    src="https://i.ibb.co/zfD2nyp/Saas.jpg"
+                    alt="image"
+                  />
+                </div>
+                <div>
+                  <button
+                    id="createTaskBtn"
+                    type="button"
+                    class="border border-black font-semibold px-2 py-1 rounded-md shadow-md hover:scale-110 duration-200"
+                  >
+                    Create Team
+                  </button>
+                </div>
               </div>
-              <div>
-                <button
-                  id="createTaskBtn"
-                  type="button"
-                  class="border border-black font-semibold px-2 py-1 rounded-md shadow-md hover:scale-110 duration-200"
-                >
-                  Create Team
-                </button>
-              </div>
-            </div>
             </div>
           </div>
 
@@ -180,6 +184,7 @@
             <div class="bg-white p-6 rounded-lg w-1/3">
               <h2 class="text-xl font-semibold">Create Team</h2>
               <form id="createTeamForm" class="space-y-4">
+                <!-- Team Name -->
                 <div>
                   <label for="teamName" class="block">Team Name</label>
                   <input
@@ -189,6 +194,8 @@
                     required
                   />
                 </div>
+
+                <!-- Team Description -->
                 <div>
                   <label for="teamDescription" class="block">Description</label>
                   <textarea
@@ -196,17 +203,40 @@
                     class="w-full px-3 py-2 border rounded-md"
                   ></textarea>
                 </div>
-                <div>
-                  <label for="participants" class="block"
-                    >Participants (Emails)</label
+
+                <!-- Participants Search -->
+                <div class="relative">
+                  <label for="participantsSearch" class="block"
+                    >Search Participants</label
                   >
                   <input
                     type="text"
-                    id="participants"
+                    id="participantsSearch"
                     class="w-full px-3 py-2 border rounded-md"
-                    required
+                    autocomplete="off"
+                    placeholder="Search by name or email"
                   />
+                  <!-- Display search results here -->
+                  <div
+                    id="participantsList"
+                    class="mt-2 absolute w-full border border-gray-300 rounded-md bg-white max-h-40 overflow-y-auto"
+                  ></div>
+                  <div
+                    id="participantsInput"
+                    class="px-3 py-2 border rounded-md flex gap-2 overflow-x-scroll"
+                  ></div>
                 </div>
+
+                <!-- Selected Participants -->
+                <div>
+                  <label class="block">Selected Participants</label>
+                  <div
+                    id="selectedParticipantsList"
+                    class="mt-2 flex gap-2 flex-wrap"
+                  ></div>
+                </div>
+
+                <!-- Buttons -->
                 <div class="flex justify-between">
                   <button
                     type="button"
@@ -221,7 +251,6 @@
                   >
                     Create Team
                   </button>
-                  
                 </div>
               </form>
             </div>

@@ -1,10 +1,18 @@
-import { auth } from "./firebase.config.js";
+import { auth, database } from "./firebase.config.js";
 import {
   GoogleAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import {
+  get,
+  ref,
+  set,
+  push,
+  update,
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 // Check is current user token is available or expired
 export function isTokenExpired(token) {
@@ -28,7 +36,7 @@ export function checkLoggedin() {
     localStorage.removeItem("refreshToken");
     window.location.href = "/auth.html";
   } else {
-    return true
+    return true;
   }
 }
 
@@ -39,21 +47,23 @@ export function googleLogin() {
     .then(async (result) => {
       const user = result.user;
 
-      const token = await user.getIdToken();
-      localStorage.setItem("idToken", token);
-      localStorage.setItem("refreshToken", user.refreshToken);
-
-      const profile = {
-        photoURL: user.photoURL,
-        displayName: user.displayName,
+      const userProfile = {
+        uid: user.uid,
         email: user.email,
+        isGoogleAuth: true,
+        name: user.displayName,
+        photoURL: user.photoURL || "https://avatar.iran.liara.run/public/48",
       };
 
-      localStorage.setItem("userProfile", JSON.stringify(profile));
+      const token = await user.getIdToken();
 
-      console.log("Google login successful:", profile);
+      await saveUserProfileToDatabase(userProfile);
+
+      localStorage.setItem("idToken", token);
+      localStorage.setItem("refreshToken", user.refreshToken);
+      localStorage.setItem("userProfile", JSON.stringify(userProfile));
+
       alert("Login successful!");
-
       window.location.href = "/home.html";
     })
     .catch((error) => {
@@ -61,7 +71,6 @@ export function googleLogin() {
       alert("Google login failed.");
     });
 }
-
 
 // Email and Password login
 export async function fetchLogindetails(loginData) {
@@ -84,30 +93,34 @@ export async function fetchLogindetails(loginData) {
 }
 
 export async function registerUser(userData) {
+  console.log(userData);
+
   try {
-   
     const userCredential = await createUserWithEmailAndPassword(
       auth,
-      userData.email,
+      userData.useremail,
       userData.password
     );
 
     const user = userCredential.user;
+    console.log(user);
 
-   
-    await user.updateProfile({
-      displayName: userData.name,
-      photoURL: userData.photoURL || "https://avatar.iran.liara.run/public/48", 
-    });
+    const defaultPhotoURL = "https://avatar.iran.liara.run/public/48";
 
     const token = await user.getIdToken();
 
-    const profile = {
-      photoURL: user.photoURL,
-      displayName: user.displayName,
+    console.log(user, "thiscsd");
+    const userProfile = {
+      uid: user.uid,
       email: user.email,
+      isGoogleAuth: false,
+      name: userData.username || "Guest",
+      photoURL: user.photoURL || defaultPhotoURL,
     };
-    localStorage.setItem("userProfile", JSON.stringify(profile));
+
+    await saveUserProfileToDatabase(userProfile);
+
+    localStorage.setItem("userProfile", JSON.stringify(userProfile));
     localStorage.setItem("idToken", token);
     localStorage.setItem("refreshToken", user.refreshToken);
 
@@ -118,31 +131,94 @@ export async function registerUser(userData) {
   }
 }
 
+export async function saveUserProfileToDatabase(profile) {
+  console.log("sddcdc", profile);
 
-export function getUserProfile() {
-  try {
-    const profile = JSON.parse(localStorage.getItem("userProfile"));
-
-   
-    if (profile) return profile;
-
-   
-    return {
-      photoURL: "https://avatar.iran.liara.run/public/48",
-      displayName: "Guest",
-      email: "No Email",
-    };
-  } catch (error) {
-    console.error("Unable to retrieve profile details:", error);
-
-    return {
-      photoURL: "https://avatar.iran.liara.run/public/48", 
-      displayName: "Guest",
-      email: "No Email",
-    };
-  }
+  await set(ref(database, `users/${profile.uid}`), profile);
 }
 
+export function getUserProfile() {
+  return new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const uid = user.uid;
+
+          const userRef = ref(database, `users/${uid}`);
+          const snapshot = await get(userRef);
+
+          if (snapshot.exists()) {
+            const profile = snapshot.val();
+            resolve({
+              photoURL: profile.photoURL || "https://avatar.iran.liara.run/public/48",
+              userId: uid,
+              displayName: profile.name || "Guest",
+              isGoogleAuth: profile.isGoogleAuth,
+              email: profile.email || "No Email",
+            });
+          } else {
+            console.warn("No user profile found in the database.");
+            resolve({
+              photoURL: "https://avatar.iran.liara.run/public/48",
+              displayName: "Guest",
+              isGoogleAuth: false,
+              email: "No Email",
+            });
+          }
+        } catch (error) {
+          console.error("Unable to retrieve profile details:", error);
+          reject({
+            photoURL: "https://avatar.iran.liara.run/public/48",
+            displayName: "Guest",
+            isGoogleAuth: false,
+            email: "No Email",
+          });
+        }
+      } else {
+        // User is not logged in
+        resolve({
+          photoURL: "https://avatar.iran.liara.run/public/48",
+          displayName: "Guest",
+          isGoogleAuth: false,
+          email: "No Email",
+        });
+      }
+    });
+  });
+}
+
+export async function getAllNotification() {
+  const user = auth.currentUser;
+
+  if (!user) {
+    console.log("No user is logged in");
+    return [];
+  }
+
+  const userId = user.uid;
+
+  const notificationsRef = ref(database, `notifications/${userId}`);
+
+  try {
+    const snapshot = await get(notificationsRef);
+
+    if (snapshot.exists()) {
+      const notifications = snapshot.val();
+
+      return Object.values(notifications).map((notification) => ({
+        message: notification.message,
+        teamId: notification.teamId,
+        timestamp: notification.timestamp,
+      }));
+    } else {
+      console.log("No notifications found");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    return [];
+  }
+}
 
 //  Log out or sign out
 export function signOutUser() {
@@ -153,7 +229,6 @@ export function signOutUser() {
       localStorage.removeItem("idToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("userProfile");
-
 
       window.location.href = "auth.html";
     })
