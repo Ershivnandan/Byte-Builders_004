@@ -1,12 +1,19 @@
-import { signOutUser, getUserProfile, getAllNotification } from "../js/auth.js";
+import { signOutUser, getUserProfile } from "../js/auth.js";
+import { deleteTeamByTeamIdAndCreatorId, joinTeam } from "../js/home.js";
+import {
+  fetchNotifications,
+  removeNotification,
+  sendNotification,
+} from "../js/notification.js";
 
 class subnavManager extends HTMLElement {
   async connectedCallback() {
     const userProfile = await getUserProfile();
     const userImage = userProfile.photoURL;
     const userName = userProfile.displayName || "GOAT";
-    const notifications = await getAllNotification();
-    let notificationCount = notifications.length > 9 ? "9+" : notifications.length || 0;
+    const notifications = await fetchNotifications();
+    let notificationCount =
+      notifications.length > 9 ? "9+" : notifications.length || 0;
 
     const routes = [
       { name: "Home", url: "home.html" },
@@ -43,7 +50,7 @@ class subnavManager extends HTMLElement {
 
             <!-- Notification Dropdown -->
             <div
-              class="hidden my-4 top-5 text-base list-none dropdown divide-y divide-gray-100 rounded-lg shadow left-0 w-[300px]"
+              class="hidden z-50 absolute right-0 my-4 top-5 text-base list-none dropdown divide-y divide-gray-100 rounded-lg shadow"
               id="notification-dropdown"
             >
               <div class="px-4 py-3">
@@ -82,8 +89,9 @@ class subnavManager extends HTMLElement {
                 <li>
                   <a
                     href="#"
+                    id="deleteMyTeam"
                     class="block px-4 py-2 text-sm hover:bg-gray-500 rounded-lg font-medium"
-                    >Settings</a>
+                    >Delete your Team</a>
                 </li>
                 <li>
                   <a
@@ -103,6 +111,13 @@ class subnavManager extends HTMLElement {
       signOutUser();
     });
 
+    if(userProfile){
+      console.log("cscdscs",userProfile)
+      document.getElementById("deleteMyTeam").addEventListener("click", async ()=>{
+        await deleteTeamByTeamIdAndCreatorId(userProfile.teamId, userProfile.userId)
+      });
+    }
+
     window.toggleDropdown = () => {
       const dropdown = document.getElementById("user-dropdown");
       dropdown.classList.toggle("hidden");
@@ -112,29 +127,111 @@ class subnavManager extends HTMLElement {
       const dropdown = document.getElementById("notification-dropdown");
 
       dropdown.classList.toggle("hidden");
-      
-      if (!dropdown.classList.contains("hidden")) {
-        const notificationList = document.getElementById("notification-list");
-        notificationList.innerHTML = "";
-        notifications.forEach((notification) => {
-          const notificationItem = document.createElement("li");
-          notificationItem.className =
-            "px-4 py-2 text-sm hover:bg-gray-500 rounded-lg flex items-center gap-2";
-          notificationItem.innerHTML = `
-            <img class="w-6 h-6 rounded-full" src="${notification.senderImage}" alt="sender photo">
-            <span>${notification.message}</span>
+
+      const notificationList = document.getElementById("notification-list");
+      notificationList.innerHTML = "";
+      notifications.forEach((notification, index) => {
+        const notificationItem = document.createElement("li");
+        const teamIdAcceptBtn = `accept-${notification.teamId}-${index}`;
+        const teamIdRejectBtn = `reject-${notification.teamId}-${index}`;
+        const removeNotifi = `remove-${notification.notificationId}`;
+        notificationItem.className =
+          "px-4 py-2 text-sm hover:bg-orange-300 hover:text-orange-500 rounded-lg flex items-center gap-2 w-full text-xs w-[500px]";
+        notificationItem.innerHTML = `
+            <img class="w-6 h-6 rounded-full" src="${
+              notification.senderImage
+            }" alt="sender photo">
+            <span class="overflow-ellipsis line-clamp-2">${
+              notification.message
+            }</span>
             <span class="text-xs text-gray-500 ml-auto">${new Date(
               notification.timestamp
             ).toLocaleString()}</span>
+            <div class="flex gap-3 text-base items-center">
+              ${
+                notification.teamId
+                  ? `
+                <div>
+                    <button
+                    type="submit"
+                    class="bg-orange-500 text-white text-xs font-bold py-1 px-2 rounded-lg cursor-pointer"
+                    id="${teamIdAcceptBtn}"
+                  >
+                    Join
+                  </button>
+                </div>
+
+              <div class="cursor-pointer">
+              <button
+                type="submit"
+                class="bg-red-500 text-white text-xs font-bold py-1 px-2 rounded-lg cursor-pointer"
+                id="${teamIdRejectBtn}"
+              >
+                Reject
+              </button>
+            
+             </div>
+              `
+                  : ``
+              }
+              <div>
+               <i
+                class="text-red-500 text-lg font-bold py-1 px-2 rounded-lg fa-solid fa-circle-xmark"
+                id="${removeNotifi}"
+              >
+              </i>
+             </div>
+            </div>
           `;
-          notificationList.appendChild(notificationItem);
-        });
-      }
-      else{
-        console.log("No notification")
-      }
+        notificationList.appendChild(notificationItem);
+
+        if (notification.teamId) {
+          document
+            .getElementById(teamIdAcceptBtn)
+            .addEventListener("click", async () => {
+              await joinTeam(notification.teamId);
+
+              const message = {
+                message: `${userName} has accepted your team invitation`,
+                senderId: userProfile.userId,
+                senderImage: userImage,
+              };
+
+              await sendNotification(notification.senderId, message);
+
+              await removeNotification(
+                userProfile.userId,
+                notification.notificationId
+              );
+            });
+          document
+            .getElementById(teamIdRejectBtn)
+            .addEventListener("click", async () => {
+              const message = {
+                message: `${userName} has rejected your team invitation`,
+                senderId: userProfile.userId,
+                senderImage: userImage,
+              };
+
+              await sendNotification(notification.senderId, message);
+
+              await removeNotification(
+                userProfile.userId,
+                notification.notificationId
+              );
+            });
+        }
+
+        document
+          .getElementById(removeNotifi)
+          .addEventListener("click", async () => {
+            await removeNotification(
+              userProfile.userId,
+              notification.notificationId
+            );
+          });
+      });
     };
-    
 
     // Close dropdown if clicking outside
     window.addEventListener("click", function (event) {
@@ -149,13 +246,6 @@ class subnavManager extends HTMLElement {
         !userDropdown.contains(event.target)
       ) {
         userDropdown.classList.add("hidden");
-      }
-
-      if (
-        !userMenuButton.contains(event.target) &&
-        !notificationDropdown.contains(event.target)
-      ) {
-        notificationDropdown.classList.add("hidden");
       }
     });
   }

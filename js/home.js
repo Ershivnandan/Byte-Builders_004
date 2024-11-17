@@ -1,4 +1,4 @@
-import { checkLoggedin, getAllNotification, getUserProfile } from "./auth.js";
+import { checkLoggedin, currentUserData, getUserProfile, saveUserProfileToDatabase } from "./auth.js";
 import { auth, database } from "./firebase.config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import {
@@ -7,18 +7,20 @@ import {
   set,
   push,
   update,
+  child,
+  remove
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { sendNotification } from "./notification.js";
 
-
-const participantsSearchInput = document.getElementById('participantsSearch');
-const participantsList = document.getElementById('participantsList');
+const participantsSearchInput = document.getElementById("participantsSearch");
+const participantsList = document.getElementById("participantsList");
 
 let HomePagetitle = document.getElementById("HomePagetitle");
 HomePagetitle.innerText = "Home";
 
 const teamSearchInput = document.getElementById("teamSearchInput");
 const teamsList = document.getElementById("teamsList");
-teamsList.innerHTML = ""
+teamsList.innerHTML = "";
 
 const dropdownButton = document.getElementById("dropdownDefaultButton");
 const dropdownMenu = document.getElementById("dropdown");
@@ -27,8 +29,8 @@ const cancelCreateteamBtn = document.getElementById("cancelCreateteamBtn");
 document.getElementById("dateOfTheDay").textContent = getToday();
 const homeUserName = document.getElementById("homeUsername");
 
-let participant = []
-let currentUserData;
+let participant = [];
+currentUserData;
 
 const completedTaskCount = document.getElementById("completedTaskCount");
 completedTaskCount.innerHTML = 0;
@@ -38,18 +40,16 @@ dropdownButton.addEventListener("click", () => {
 });
 
 cancelCreateteamBtn.addEventListener("click", () => {
-  participant = []
+  participant = [];
   closeModal();
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
-
-  currentUserData = await getUserProfile();
   checkLoggedin();
 });
 
-if(teamSearchInput.textContent === null){
-  teamsList.innerHTML = ""
+if (teamSearchInput.textContent === null) {
+  teamsList.innerHTML = "";
 }
 
 const createTeamBtn = document.getElementById("createTeamBtn");
@@ -63,7 +63,7 @@ createTeamBtn.addEventListener("click", () => {
 async function setHomeUserName() {
   try {
     const profile = await getUserProfile();
-    homeUserName.textContent = profile.displayName; 
+    homeUserName.textContent = profile.displayName;
   } catch (error) {
     console.error("Error setting user name:", error);
     homeUserName.textContent = "Guest";
@@ -108,69 +108,67 @@ function getToday() {
   return formattedDate;
 }
 
-participantsSearchInput.addEventListener('input', async () => {
+participantsSearchInput.addEventListener("input", async () => {
   const searchTerm = participantsSearchInput.value.toLowerCase();
-  
+
   if (searchTerm) {
-    const usersRef = ref(database, 'users');
+    const usersRef = ref(database, "users");
     const snapshot = await get(usersRef);
-    
-    participantsList.innerHTML = ''; 
+
+    participantsList.innerHTML = "";
     if (snapshot.exists()) {
       const users = snapshot.val();
       let matchCount = 0;
-      
+
       Object.keys(users).forEach((userId) => {
         const user = users[userId];
-        if(user.uid === currentUserData.userId) return;
-        
+        if (user.uid === currentUserData.userId) return;
+
         if (
           user.email.toLowerCase().includes(searchTerm) ||
           user.name.toLowerCase().includes(searchTerm)
         ) {
           matchCount++;
           if (matchCount > 5) return;
-          const suggestionElement = document.createElement('div');
-          suggestionElement.className = 'participant-suggestion flex gap-2 p-2 hover:bg-gray-100 cursor-pointer';
+          const suggestionElement = document.createElement("div");
+          suggestionElement.className =
+            "participant-suggestion flex gap-2 p-2 hover:bg-gray-100 cursor-pointer";
 
           suggestionElement.innerHTML = `
             <img loading="lazy" src="${user.photoURL}" alt="${user.name}" class="w-8 h-8 rounded-full">
             <span class="user-name">${user.name}</span>
           `;
 
-          
-          suggestionElement.addEventListener('click', () => {
+          suggestionElement.addEventListener("click", () => {
             addParticipant(user);
-            participantsList.innerHTML = ''; 
+            participantsList.innerHTML = "";
           });
 
           participantsList.appendChild(suggestionElement);
         }
       });
 
-    
       if (matchCount === 0) {
-        const noResultsMessage = document.createElement('div');
-        noResultsMessage.className = 'p-2 text-gray-500 text-sm';
-        noResultsMessage.textContent = 'No results found.';
+        const noResultsMessage = document.createElement("div");
+        noResultsMessage.className = "p-2 text-gray-500 text-sm";
+        noResultsMessage.textContent = "No results found.";
         participantsList.appendChild(noResultsMessage);
       }
     }
   } else {
-    participantsList.innerHTML = ''; 
+    participantsList.innerHTML = "";
   }
 });
 
-
 function addParticipant(user) {
-
   if (participant.includes(user.uid) || user.uid === currentUserData.userId) {
-    return; 
+    return;
   }
-  
+
   const participantsInput = document.getElementById("participantsInput");
-  const participantElement = document.createElement('div');
-  participantElement.className = 'participant flex items-center gap-3 p-2 mb-2 border rounded-md';
+  const participantElement = document.createElement("div");
+  participantElement.className =
+    "participant flex items-center gap-3 p-2 mb-2 border rounded-md";
 
   participantElement.innerHTML = `
     <img loading="lazy" src="${user.photoURL}" alt="${user.name}" class="w-6 h-6 rounded-full">
@@ -178,35 +176,36 @@ function addParticipant(user) {
     <i class="remove-participant fa-solid fa-xmark text-red-500 px-2 py-1 cursor-pointer"></i>
   `;
 
+  participant.push(user.uid);
 
-  participant.push(user.uid)
-
-  participantElement.querySelector('.remove-participant').addEventListener('click', () => {
-    participantElement.remove();
-    removeParticipantEmail(user.email);
-  });
+  participantElement
+    .querySelector(".remove-participant")
+    .addEventListener("click", () => {
+      participantElement.remove();
+      removeParticipantEmail(user.email);
+    });
 
   participantsInput.appendChild(participantElement);
 }
 
-
 function removeParticipantEmail(email) {
   const participantsInput = document.getElementById("participantsInput");
-  const participants = participantsInput.value.split(',');
-  const updatedParticipants = participants.filter((participant) => participant.trim() !== email);
-  participantsInput.value = updatedParticipants.join(',');
+  const participants = participantsInput.value.split(",");
+  const updatedParticipants = participants.filter(
+    (participant) => participant.trim() !== email
+  );
+  participantsInput.value = updatedParticipants.join(",");
 }
 
 const createTeamForm = document.getElementById("createTeamForm");
 
-createTeamForm.addEventListener('submit', async (e) => {
+createTeamForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const teamName = document.getElementById('teamName').value;
-  const teamDescription = document.getElementById('teamDescription').value;
+  const teamName = document.getElementById("teamName").value;
+  const teamDescription = document.getElementById("teamDescription").value;
 
   const user = auth.currentUser;
   const creatorId = user ? user.uid : null;
-
   const teamRef = {
     name: teamName,
     description: teamDescription,
@@ -215,40 +214,41 @@ createTeamForm.addEventListener('submit', async (e) => {
   };
 
   try {
-    const newTeamRef = push(ref(database, 'teams'));
-    const teamId = newTeamRef.key; 
+    const newTeamRef = push(ref(database, "teams"));
+    const teamId = newTeamRef.key;
     await set(newTeamRef, { ...teamRef, teamId });
 
     sendInvitations(participant, teamName, teamId, creatorId);
-
+    let userData = {
+      ...currentUserData,
+      teamId
+    }
+    saveUserProfileToDatabase(userData)
     closeModal();
-    console.log('Team created successfully!');
+    console.log("Team created successfully!");
   } catch (error) {
-    console.error('Error creating team: ', error);
+    console.error("Error creating team: ", error);
   }
 });
 
 async function sendInvitations(participants, teamName, teamId, creatorId) {
-
   for (let userId of participants) {
     const userRef = ref(database, `users/${userId}`);
     const userSnapshot = await get(userRef);
     if (userSnapshot.exists()) {
       const user = userSnapshot.val();
 
-      const notificationRef = push(ref(database, `notifications/${user.uid}`));
-      await set(notificationRef, {
+      const messageObj = {
         message: `You've been invited to join the team "${teamName}".`,
         teamId: teamId,
         senderId: creatorId,
         senderImage: currentUserData.photoURL,
-        timestamp: new Date().toISOString(),
-      });
+      };
+
+      await sendNotification(user.uid, messageObj);
     }
   }
 }
-
-
 
 teamSearchInput.addEventListener("input", async () => {
   const searchTerm = teamSearchInput.value.toLowerCase();
@@ -266,8 +266,8 @@ teamSearchInput.addEventListener("input", async () => {
       const teams = snapshot.val();
       Object.keys(teams).forEach((teamId, index) => {
         const team = teams[teamId];
-        if(searchTerm === null){
-          return
+        if (searchTerm === null) {
+          return;
         }
         if (team.name.toLowerCase().includes(searchTerm)) {
           const teamElement = document.createElement("div");
@@ -280,14 +280,13 @@ teamSearchInput.addEventListener("input", async () => {
               <button class="bg-orange-500 text-white px-4 py-1 rounded-lg" id="${buttonid}">Join</button>
             </div>
           `;
-          if(teamSearchInput){
+          if (teamSearchInput) {
             teamsList.appendChild(teamElement);
             document.getElementById(buttonid).addEventListener("click", () => {
               joinTeam(teamId);
             });
-          }
-          else{
-            teamsList.innerHTML = ""
+          } else {
+            teamsList.innerHTML = "";
           }
         }
       });
@@ -297,13 +296,13 @@ teamSearchInput.addEventListener("input", async () => {
   }
 });
 
-async function joinTeam(teamId) {
+export async function joinTeam(teamId) {
   const user = auth.currentUser;
   const userId = user ? user.uid : null;
   const userdata = await getUserProfile();
-  const userEmail = userdata.email;
+  const userid = userdata.userId;
 
-  if (userId && userEmail) {
+  if (userId && userid) {
     const teamRef = ref(database, `teams/${teamId}/participants`);
 
     try {
@@ -312,14 +311,14 @@ async function joinTeam(teamId) {
 
       const nextIndex = Object.keys(participants).length;
 
-      const isAlreadyAdded = Object.values(participants).includes(userEmail);
+      const isAlreadyAdded = Object.values(participants).includes(userid);
       if (isAlreadyAdded) {
         alert("You are already part of this team.");
         return;
       }
 
       await update(teamRef, {
-        [nextIndex]: userEmail,
+        [nextIndex]: userid,
       });
 
       alert("Joined the team successfully!");
@@ -363,8 +362,6 @@ function fetchUserGoals(timePeriod) {
 }
 
 function fetchTopGoals() {
-
-  
   onAuthStateChanged(auth, (user) => {
     if (user) {
       const userId = user.uid;
@@ -439,22 +436,18 @@ async function displayTeamIcon(team) {
       </div>
     `;
 
-  // Add the team icon to the container
-  teamIconContainer.innerHTML = '';  // Clear previous content
+  teamIconContainer.innerHTML = "";
   teamIconContainer.appendChild(teamIcon);
 
-  // Fetch user data for each participant
   const participantsList = team.participants;
   const users = await Promise.all(
     participantsList.map(async (userId) => {
-      // Fetch each user by their ID
       const userRef = ref(database, `users/${userId}`);
       const userSnapshot = await get(userRef);
-      return userSnapshot.exists() ? userSnapshot.val() : null; // Return user data if exists
+      return userSnapshot.exists() ? userSnapshot.val() : null;
     })
   );
 
-  // Add each participant to the list in the dropdown after DOM has been updated
   const teamParticipantsList = document.getElementById("teamParticipantsList");
   if (teamParticipantsList) {
     users.forEach((user) => {
@@ -471,7 +464,6 @@ async function displayTeamIcon(team) {
     });
   }
 
-  // Dropdown toggle functionality
   teamIcon.addEventListener("click", () => {
     const dropdownMenu = document.getElementById("teamDropdown");
     if (dropdownMenu) {
@@ -479,9 +471,6 @@ async function displayTeamIcon(team) {
     }
   });
 }
-
-
-
 
 function displayTopGoals(userGoals) {
   const topGoals = userGoals
@@ -589,6 +578,34 @@ document.querySelectorAll("#dropdown ul li a").forEach((item) => {
     dropdownMenu.classList.add("hidden");
   });
 });
+
+
+export const deleteTeamByTeamIdAndCreatorId = async (teamId, creatorId) => {
+  console.log("called", teamId)
+  try {
+    const teamRef = ref(database, `teams/${teamId}`);
+
+
+    const snapshot = await get(teamRef);
+
+    if (!snapshot.exists()) {
+      console.log(`Team with ID ${teamId} not found.`);
+      return;
+    }
+
+    const team = snapshot.val();
+    if (team.creatorId === creatorId) {
+      await remove(teamRef);
+      console.log(`Team with ID ${teamId} deleted successfully.`);
+    } else {
+      console.log("Creator ID does not match. Cannot delete the team.");
+    }
+
+  } catch (error) {
+    console.error("Error deleting team: ", error);
+  }
+};
+
 
 checkIfTeamExists();
 setHomeUserName();

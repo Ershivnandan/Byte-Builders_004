@@ -24,6 +24,7 @@ export function isTokenExpired(token) {
 
   return now > expiry;
 }
+export let currentUserData;
 
 const idToken = localStorage.getItem("idToken");
 
@@ -93,8 +94,6 @@ export async function fetchLogindetails(loginData) {
 }
 
 export async function registerUser(userData) {
-  console.log(userData);
-
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
@@ -132,9 +131,8 @@ export async function registerUser(userData) {
 }
 
 export async function saveUserProfileToDatabase(profile) {
-  console.log("sddcdc", profile);
 
-  await set(ref(database, `users/${profile.uid}`), profile);
+  await set(ref(database, `users/${currentUserData.userId}`), profile);
 }
 
 export function getUserProfile() {
@@ -150,7 +148,8 @@ export function getUserProfile() {
           if (snapshot.exists()) {
             const profile = snapshot.val();
             resolve({
-              photoURL: profile.photoURL || "https://avatar.iran.liara.run/public/48",
+              photoURL:
+                profile.photoURL || "https://avatar.iran.liara.run/public/48",
               userId: uid,
               displayName: profile.name || "Guest",
               isGoogleAuth: profile.isGoogleAuth,
@@ -187,38 +186,7 @@ export function getUserProfile() {
   });
 }
 
-export async function getAllNotification() {
-  const user = auth.currentUser;
 
-  if (!user) {
-    console.log("No user is logged in");
-    return [];
-  }
-
-  const userId = user.uid;
-
-  const notificationsRef = ref(database, `notifications/${userId}`);
-
-  try {
-    const snapshot = await get(notificationsRef);
-
-    if (snapshot.exists()) {
-      const notifications = snapshot.val();
-
-      return Object.values(notifications).map((notification) => ({
-        message: notification.message,
-        teamId: notification.teamId,
-        timestamp: notification.timestamp,
-      }));
-    } else {
-      console.log("No notifications found");
-      return [];
-    }
-  } catch (error) {
-    console.error("Error fetching notifications:", error);
-    return [];
-  }
-}
 
 //  Log out or sign out
 export function signOutUser() {
@@ -236,3 +204,5 @@ export function signOutUser() {
       console.error("Sign-out error:", error);
     });
 }
+
+currentUserData = await getUserProfile();
