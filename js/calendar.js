@@ -76,7 +76,7 @@ function renderCalendar() {
                     ${userTasks[fullDate]
                       .map(
                         (task) =>
-                          `<div class="task-item text-xs truncate bg-blue-500 text-white p-1 rounded-md cursor-pointer h-5 text-center min-w-max" data-id="${task.id}">
+                          `<div class="task-item text-xs truncate capitalize font-semibold bg-blue-500 text-white p-1 rounded-md cursor-pointer h-5 text-center min-w-max" data-id="${task.id}">
                             ${task.title}
                           </div>`
                       )
