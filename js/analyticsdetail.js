@@ -14,7 +14,6 @@ function groupTasksByDate(tasks) {
   return grouped;
 }
 
-
 function calculateAverageStatus(groupedTasks) {
   const averages = [];
   for (const date in groupedTasks) {
