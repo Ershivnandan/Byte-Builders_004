@@ -130,8 +130,8 @@ export async function registerUser(userData) {
 }
 
 export async function saveUserProfileToDatabase(profile) {
-
-  await set(ref(database, `users/${profile.uid}`), profile);
+  const userid = profile.uid || profile.userId;
+  await set(ref(database, `users/${userid}`), profile);
 }
 
 export function getUserProfile() {
@@ -146,14 +146,7 @@ export function getUserProfile() {
 
           if (snapshot.exists()) {
             const profile = snapshot.val();
-            resolve({
-              photoURL:
-                profile.photoURL || "https://avatar.iran.liara.run/public/48",
-              userId: uid,
-              displayName: profile.name || "Guest",
-              isGoogleAuth: profile.isGoogleAuth,
-              email: profile.email || "No Email",
-            });
+            resolve(profile);
           } else {
             console.warn("No user profile found in the database.");
             resolve({

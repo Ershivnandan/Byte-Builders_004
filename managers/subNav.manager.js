@@ -114,7 +114,7 @@ class subnavManager extends HTMLElement {
 
     if(userProfile){
       document.getElementById("deleteMyTeam").addEventListener("click", async ()=>{
-        await deleteTeamByTeamIdAndCreatorId(userProfile.teamId, userProfile.userId)
+        await deleteTeamByTeamIdAndCreatorId(userProfile.teamId, userProfile.userId);
       });
     }
 

@@ -210,7 +210,6 @@ createTeamForm.addEventListener("submit", async (e) => {
   const teamRef = {
     name: teamName,
     description: teamDescription,
-    participants: participant,
     creatorId: creatorId,
   };
 

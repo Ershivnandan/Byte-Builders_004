@@ -17,7 +17,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 export const deleteTeamByTeamIdAndCreatorId = async (teamId, creatorId) => {
-  console.log("called", teamId);
   try {
     const teamRef = ref(database, `teams/${teamId}`);
 
