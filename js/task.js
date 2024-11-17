@@ -10,6 +10,7 @@ import {
   update,
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getTasksByUser } from "./team.js";
 const modal = document.getElementById("static-modal");
 
 document.querySelectorAll("[data-modal-hide]").forEach((button) => {
@@ -20,6 +21,7 @@ document.querySelectorAll("[data-modal-hide]").forEach((button) => {
 const TaskPagetitle = document.getElementById("TaskPagetitle");
 TaskPagetitle.innerText = "Task";
 
+let userTasks;
 checkLoggedin();
 
 document.getElementById("createTaskBtn").addEventListener("click", () => {
@@ -32,6 +34,11 @@ document.querySelectorAll("[data-modal-hide]").forEach((el) => {
     document.getElementById("static-modal").classList.add("hidden");
   });
 });
+
+async function fetchUsertask() {
+  userTasks = await getTasksByUser();
+  if (userTasks) displayTasks(userTasks);
+}
 
 const bgColors = [
   "bg-gradient-to-r from-teal-500 to-blue-900",
@@ -77,43 +84,8 @@ taskForm.addEventListener("submit", async (e) => {
 
   await set(ref(database, `tasks/${taskId}`), newTask);
   modal.classList.add("hidden");
-  getTasksByUser();
+  fetchUsertask();
 });
-
-export function getTasksByUser() {
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const userId = user.uid;
-      const tasksRef = ref(database, "tasks");
-      const snapshot = await get(tasksRef);
-
-      if (snapshot.exists()) {
-        const tasks = snapshot.val();
-        const userTasks = Object.entries(tasks)
-          .filter(([taskId, task]) => task.userId === userId)
-          .map(([taskId, task]) => ({ taskId, ...task }));
-
-        if (userTasks) displayTasks(userTasks);
-      } else {
-        const taskGrid = document.getElementById("taskGrid");
-
-        taskGrid.innerHTML = "";
-        taskGrid.innerHTML = `
-          <div class="flex justify-center items-center text-center font-bold text-3xl">
-              <p>
-                You have no task yet!
-              </p>
-            </div>
-        `;
-        console.log("No tasks found for the user.");
-        return [];
-      }
-    } else {
-      console.log("User not logged in.");
-      return [];
-    }
-  });
-}
 
 async function updateTaskInFirebase(updatedTask) {
   const taskRef = ref(database, `tasks/${updatedTask.taskId}`);
@@ -124,7 +96,6 @@ async function updateTaskInFirebase(updatedTask) {
     startDate: updatedTask.startDate,
   });
 
-  getTasksByUser();
   console.log("Task updated successfully!");
 }
 
@@ -135,14 +106,14 @@ async function toggleArchiveTask(taskId, currentStatus) {
     isArchive: !currentStatus,
   });
 
-  getTasksByUser();
+  fetchUsertask();
   console.log("Task archive status toggled successfully!");
 }
 
 async function deleteTask(taskId) {
   const taskRef = ref(database, `tasks/${taskId}`);
   await set(taskRef, null);
-  getTasksByUser();
+  fetchUsertask();
 }
 
 function displayTasks(userTasks) {
@@ -150,9 +121,8 @@ function displayTasks(userTasks) {
   taskGrid.innerHTML = "";
 
   userTasks.forEach((task, index) => {
-
-    if(task.isArchive){
-      return
+    if (task.isArchive) {
+      return;
     }
     const card = document.createElement("div");
     card.className = `flex flex-col justify-between border rounded-lg p-4 text-white ${
@@ -215,11 +185,11 @@ function formatDateForInput(dateString) {
 function openEditModal(task) {
   const modal = document.getElementById("editTaskModal");
 
-
   modal.querySelector("#taskTitle").value = task.title;
   modal.querySelector("#taskDescription").value = task.description;
-  modal.querySelector("#taskStartDate").value = formatDateForInput(task.startDate);
-
+  modal.querySelector("#taskStartDate").value = formatDateForInput(
+    task.startDate
+  );
 
   modal.querySelector("#saveTaskButton").onclick = () => {
     const updatedTask = {
@@ -236,10 +206,8 @@ function openEditModal(task) {
   modal.classList.remove("hidden");
 }
 
+fetchUsertask();
 
-document.addEventListener("DOMContentLoaded", () => {
-  getTasksByUser();
-});
 document.getElementById("cancelEditButton").addEventListener("click", () => {
   closeEditModal();
 });
@@ -249,4 +217,3 @@ function closeEditModal() {
 
   modal.classList.add("hidden");
 }
-

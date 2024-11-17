@@ -5,58 +5,105 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="calendar.css">
-    <script src="https://kit.fontawesome.com/49b1f13654.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="calendar.css" />
+    <script
+      src="https://kit.fontawesome.com/49b1f13654.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <style>
+      .task-container {
+        scrollbar-width: none; 
+      }
+
+      .task-container::-webkit-scrollbar {
+        display: none; 
+      }
+    </style>
   </head>
-  <body class="h-screen bg-gradient-to-b from-orange-500 to-white flex font-sans">
+  <body
+    class="h-screen bg-gradient-to-b from-orange-500 to-white flex font-sans"
+  >
     <!-- Sidebar -->
     <div class="md:w-1/4 lg:relative sm:absolute w-0">
       <side-bar></side-bar>
     </div>
 
     <!-- Main Content Area -->
-    <div class="flex-grow flex items-center justify-center">
-      <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-        <div class="flex justify-between items-center mb-4">
-          <!-- Prev Month Button -->
-          <button class="btn prev-month month-btn bg-gray-200 hover:bg-orange-100 px-3 py-1 rounded text-gray-600">
-            <i class="fas fa-chevron-left"></i> Prev Month
-          </button>
-          <div class="current-month font-bold text-lg"></div>
-          <!-- Next Month Button -->
-          <button class="btn next-month month-btn bg-gray-200 hover:bg-orange-100 px-3 py-1 rounded text-gray-600">
-            Next Month <i class="fas fa-chevron-right"></i>
-          </button>
-        </div>
-        <div class="grid grid-cols-7 text-center text-sm font-semibold text-gray-600 mb-2">
-          <div>Sun</div>
-          <div>Mon</div>
-          <div>Tue</div>
-          <div>Wed</div>
-          <div>Thu</div>
-          <div>Fri</div>
-          <div>Sat</div>
-        </div>
-        <div class="calendar-days grid grid-cols-7 gap-1"></div>
-        <div class="flex justify-between mt-4">
-          <!-- Prev Year Button -->
-          <button class="btn prev-year bg-gray-200 hover:bg-orange-100 px-3 py-1 rounded text-gray-600">
-            <i class="fas fa-chevron-left"></i> Prev Year
-          </button>
-          <!-- Today Button -->
-          <button class="btn today bg-gray-200 hover:bg-orange-100 px-3 py-1 rounded text-gray-600">
-            Today 
-          </button>
-          <!-- Next Year Button -->
-          <button class="btn next-year bg-gray-200 hover:bg-orange-100 px-3 py-1 rounded text-gray-600">
-            Next Year <i class="fas fa-chevron-right"></i>
-          </button>
+    <div class="w-full">
+      <!-- Navbar -->
+      <div class="w-full bg-blue-500 text-white">
+        <sub-nav></sub-nav>
+      </div>
+
+      <!-- Main Content below Navbar -->
+      <div class="w-full">
+        <div class="flex-grow flex items-center justify-center">
+          <div
+            class="bg-white rounded-lg shadow-lg p-6 w-full"
+            style="
+              background: linear-gradient(
+                180deg,
+                rgba(238, 122, 5, 0.978) 0%,
+                rgba(255, 255, 255, 1) 81%
+              );
+            "
+          >
+            <div class="flex justify-between items-center mb-4">
+              <!-- Prev Month Button -->
+              <button
+                class="btn prev-month month-btn hover:text-orange-500 hover:bg-orange-300 cursor-pointer font-semibold text-black px-3 py-1 rounded"
+              >
+                <i class="fas fa-chevron-left"></i> Prev Month
+              </button>
+              <div class="current-month font-bold text-lg"></div>
+              <!-- Next Month Button -->
+              <button
+                class="btn next-month month-btn hover:text-orange-500 hover:bg-orange-300 cursor-pointer font-semibold text-black px-3 py-1 rounded"
+              >
+                Next Month <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+            <div
+              class="grid grid-cols-7 text-center text-sm font-semibold text-gray-600 mb-2"
+            >
+              <div class="cursor-pointer">Sun</div>
+              <div class="cursor-pointer">Mon</div>
+              <div class="cursor-pointer">Tue</div>
+              <div class="cursor-pointer">Wed</div>
+              <div class="cursor-pointer">Thu</div>
+              <div class="cursor-pointer">Fri</div>
+              <div class="cursor-pointer">Sat</div>
+            </div>
+            <div class="calendar-days grid grid-cols-7 gap-1 text-center"></div>
+            <div class="flex justify-between mt-4">
+              <!-- Prev Year Button -->
+              <button
+                class="prev-year hover:text-orange-500 duration-200 hover:bg-orange-300 px-3 py-1 rounded text-gray-600"
+              >
+                <i class="fas fa-chevron-left"></i> Prev Year
+              </button>
+              <!-- Today Button -->
+              <button
+                class="today hover:text-orange-500 duration-200 hover:bg-orange-300 px-3 py-1 rounded text-gray-600"
+              >
+                Today
+              </button>
+              <!-- Next Year Button -->
+              <button
+                class="next-year hover:text-orange-500 duration-200 hover:bg-orange-300 px-3 py-1 rounded text-gray-600"
+              >
+                Next Year <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Script files -->
     <script src="./managers/sidebar.manager.js"></script>
-    <script src="./calendar.js"></script>
+    <script type="module" src="./managers/subNav.manager.js"></script>
+    <script type="module" src="./js/calendar.js"></script>
   </body>
 </html>

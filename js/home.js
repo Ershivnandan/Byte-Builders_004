@@ -11,6 +11,7 @@ import {
   remove
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 import { sendNotification } from "./notification.js";
+import { joinTeam } from "./team.js";
 
 const participantsSearchInput = document.getElementById("participantsSearch");
 const participantsList = document.getElementById("participantsList");
@@ -296,41 +297,7 @@ teamSearchInput.addEventListener("input", async () => {
   }
 });
 
-export async function joinTeam(teamId) {
-  const user = auth.currentUser;
-  const userId = user ? user.uid : null;
-  const userdata = await getUserProfile();
-  const userid = userdata.userId;
 
-  if (userId && userid) {
-    const teamRef = ref(database, `teams/${teamId}/participants`);
-
-    try {
-      const snapshot = await get(teamRef);
-      let participants = snapshot.exists() ? snapshot.val() : {};
-
-      const nextIndex = Object.keys(participants).length;
-
-      const isAlreadyAdded = Object.values(participants).includes(userid);
-      if (isAlreadyAdded) {
-        alert("You are already part of this team.");
-        return;
-      }
-
-      await update(teamRef, {
-        [nextIndex]: userid,
-      });
-
-      alert("Joined the team successfully!");
-      checkIfTeamExists();
-    } catch (error) {
-      console.error("Error joining team: ", error);
-      alert("Failed to join the team. Please try again later.");
-    }
-  } else {
-    alert("Please login to join a team.");
-  }
-}
 
 function fetchUserGoals(timePeriod) {
   const userId = auth.currentUser.uid;
@@ -580,31 +547,7 @@ document.querySelectorAll("#dropdown ul li a").forEach((item) => {
 });
 
 
-export const deleteTeamByTeamIdAndCreatorId = async (teamId, creatorId) => {
-  console.log("called", teamId)
-  try {
-    const teamRef = ref(database, `teams/${teamId}`);
 
-
-    const snapshot = await get(teamRef);
-
-    if (!snapshot.exists()) {
-      console.log(`Team with ID ${teamId} not found.`);
-      return;
-    }
-
-    const team = snapshot.val();
-    if (team.creatorId === creatorId) {
-      await remove(teamRef);
-      console.log(`Team with ID ${teamId} deleted successfully.`);
-    } else {
-      console.log("Creator ID does not match. Cannot delete the team.");
-    }
-
-  } catch (error) {
-    console.error("Error deleting team: ", error);
-  }
-};
 
 
 checkIfTeamExists();

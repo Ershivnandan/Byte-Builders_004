@@ -1,5 +1,5 @@
 import { signOutUser, getUserProfile } from "../js/auth.js";
-import { deleteTeamByTeamIdAndCreatorId, joinTeam } from "../js/home.js";
+import { deleteTeamByTeamIdAndCreatorId, joinTeam } from "../js/team.js";
 import {
   fetchNotifications,
   removeNotification,
@@ -112,7 +112,6 @@ class subnavManager extends HTMLElement {
     });
 
     if(userProfile){
-      console.log("cscdscs",userProfile)
       document.getElementById("deleteMyTeam").addEventListener("click", async ()=>{
         await deleteTeamByTeamIdAndCreatorId(userProfile.teamId, userProfile.userId)
       });

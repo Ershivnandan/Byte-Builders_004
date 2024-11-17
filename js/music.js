@@ -1,7 +1,8 @@
+import { checkLoggedin } from "./auth.js";
+
 const clientId = "2afb0602e5174cf3bcd145c2c993b6f2";
 const clientSecret = "49fb608670d1451b92e7b12b8b707075";
 
-// Get token from Spotify API
 async function getToken() {
   try {
     const response = await fetch("https://accounts.spotify.com/api/token", {
@@ -22,7 +23,6 @@ async function getToken() {
   }
 }
 
-// Search for songs
 async function searchSong(query) {
   const token = await getToken();
   if (!token) return [];
@@ -37,6 +37,7 @@ async function searchSong(query) {
       }
     );
     const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Failed to fetch songs");
     return data.tracks.items || [];
   } catch (error) {
     console.error("Error fetching songs:", error.message);
@@ -44,7 +45,6 @@ async function searchSong(query) {
   }
 }
 
-// Display results
 async function searchAndDisplaySongs(query) {
   const trackList = document.getElementById("trackList");
   trackList.innerHTML = "<p>Loading...</p>";
@@ -82,58 +82,103 @@ async function searchAndDisplaySongs(query) {
   });
 }
 
-// Debounce function to limit API calls
-function debounce(func, delay) {
-  let timeout;
-  return function (...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), delay);
-  };
+
+function playSong(song) {
+  if (!song.preview_url) {
+    alert("No preview available for this song!");
+    return;
+  }
+
+  audioPlayer.src = song.preview_url;
+
+  audioPlayer
+    .play()
+    .then(() => {
+      currentTrack.textContent = `Playing: ${song.name} by ${song.artists[0].name}`;
+      audioPlayer.hidden = false;
+      isPlaying = true;
+      playIcon.classList.remove("fa-play");
+      playIcon.classList.add("fa-pause");
+    })
+    .catch((error) => {
+      console.error("Error playing audio:", error.message);
+    });
 }
 
 
-function playSong(song) {
-    const audioPlayer = document.getElementById("audioPlayer");
-    const currentTrack = document.getElementById("currentTrack");
-  
-    // Check if the song has a preview URL
-    if (!song.preview_url) {
-      alert("No preview available for this song!");
-      return;
-    }
-  
-    // Set the audio source and play
-    audioPlayer.src = song.preview_url;
-  
-    // Attempt to play the audio
-    audioPlayer
-      .play()
-      .then(() => {
-        currentTrack.textContent = `Playing: ${song.name} by ${song.artists[0].name}`;
-        audioPlayer.hidden = false; // Ensure the audio player is visible
-      })
-      .catch((error) => {
-        console.error("Error playing audio:", error.message);
-        alert("Unable to play the song. Please try again.");
-      });
-  }
-  
+function loadRandomCalmSongs() {
+  searchAndDisplaySongs("calm focus"); 
+}
 
-// Attach event listener with debouncing
+
+let isPlaying = false;
+let audioPlayer = document.getElementById("audioPlayer");
+let playPauseButton = document.getElementById("playPauseButton");
+let playIcon = document.getElementById("playIcon");
+let timeline = document.getElementById("timeline");
+let volumeControl = document.getElementById("volumeControl");
+let currentTrack = document.getElementById("currentTrack");
+
+playPauseButton.addEventListener("click", () => {
+  if (isPlaying) {
+    audioPlayer.pause();
+    isPlaying = false;
+    playIcon.classList.remove("fa-pause");
+    playIcon.classList.add("fa-play");
+  } else {
+    audioPlayer.play();
+    isPlaying = true;
+    playIcon.classList.remove("fa-play");
+    playIcon.classList.add("fa-pause");
+  }
+});
+
+
+audioPlayer.addEventListener("timeupdate", () => {
+  const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+  timeline.value = progress;
+});
+
+
+timeline.addEventListener("input", () => {
+  const seekTo = (timeline.value / 100) * audioPlayer.duration;
+  audioPlayer.currentTime = seekTo;
+});
+
+
+volumeControl.addEventListener("input", () => {
+  audioPlayer.volume = volumeControl.value / 100;
+});
+
+
+function debounce(func, delay) {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout); 
+    timeout = setTimeout(() => func.apply(this, args), delay); 
+  };
+}
+
 const searchInput = document.getElementById("searchInput");
 const searchButton = document.getElementById("searchButton");
 
 searchButton.addEventListener("click", () => {
-  if (!searchInput.value.trim()) {
+  const query = searchInput.value.trim();
+  if (!query) {
     alert("Please enter a song name!");
     return;
   }
-  searchAndDisplaySongs(searchInput.value.trim());
+  searchAndDisplaySongs(query);
 });
 
 searchInput.addEventListener(
   "input",
   debounce(() => {
-    if (searchInput.value.trim()) searchAndDisplaySongs(searchInput.value.trim());
+    const query = searchInput.value.trim();
+    if (query) searchAndDisplaySongs(query);
   }, 500)
 );
+
+
+window.addEventListener("load", loadRandomCalmSongs);
+checkLoggedin();
