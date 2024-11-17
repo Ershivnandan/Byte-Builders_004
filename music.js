@@ -91,21 +91,6 @@ function debounce(func, delay) {
   };
 }
 
-// Play a song
-// function playSong(song) {
-//   const audioPlayer = document.getElementById("audioPlayer");
-//   const currentTrack = document.getElementById("currentTrack");
-
-//   if (!song.preview_url) {
-//     alert("No preview available for this song!");
-//     return;
-//   }
-
-//   audioPlayer.src = song.preview_url;
-//   audioPlayer.play();
-
-//   currentTrack.textContent = `Playing: ${song.name} by ${song.artists[0].name}`;
-// }
 
 function playSong(song) {
     const audioPlayer = document.getElementById("audioPlayer");

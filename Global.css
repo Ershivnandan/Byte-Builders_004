@@ -16,6 +16,16 @@
   --text-color-dark: #f7fafc; /* Light Text Color */
 }
 
+
+.to-green-300 {
+  --tw-gradient-to: #fffdc6 var(--tw-gradient-to-position) !important;
+}
+
+<style>
+.from-cyan-400 {
+  --tw-gradient-from: #ff9065 var(--tw-gradient-from-position) !important;
+
+}
 /* Apply light theme by default */
 
 .hideNotifi{
@@ -81,3 +91,6 @@ button {
   border: 1px solid white !important;
 }
 
+.py-8 {
+  padding: 1.5rem 2rem !important;
+}
