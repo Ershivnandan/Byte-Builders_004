@@ -110,7 +110,7 @@ function playSong(song) {
 
 // Random calm songs query
 function loadRandomCalmSongs() {
-  searchAndDisplaySongs("calm focus"); // Using "calm focus" as the query to fetch relaxing/focus music
+  searchAndDisplaySongs("calm focus"); 
 }
 
 // Event listeners for play/pause functionality
