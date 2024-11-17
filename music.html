@@ -1,84 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music Player</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./Global.css" />
+    <script src="https://kit.fontawesome.com/49b1f13654.js" crossorigin="anonymous"></script>
+    <style>
+      :root {
+        --primary-color: rgba(238, 100, 5, 0.978);
+      }
+    </style>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Music Player</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="./Global.css">
-  <script src="https://kit.fontawesome.com/49b1f13654.js" crossorigin="anonymous"></script>
-  <style>
-    :root {
-      --primary-color: rgba(238, 100, 5, 0.978);
-    }
-  </style>
-</head>
+  <body class="bg-gray-100 text-gray-900 font-sans h-screen">
+    <div class="flex h-full">
+      <!-- Sidebar -->
+      <div class="md:w-1/4 lg:relative sm:absolute w-1/4">
+        <side-bar></side-bar>
+      </div>
 
-<body class="bg-gray-100 text-gray-900 font-sans h-screen">
-  <div class="flex h-full">
-    <!-- Sidebar -->
-    <div class="md:w-1/4 lg:relative sm:absolute w-0">
-      <side-bar></side-bar>
+      <!-- Main Content Area -->
+      <div class="w-full flex flex-col">
+        <!-- Navbar -->
+        <nav class="bg-[var(--primary-color)] text-white p-4 shadow-lg">
+          <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">🎵 My Music App</h1>
+          </div>
+        </nav>
+
+        <!-- Main Section -->
+        <main class="container mx-auto py-8">
+          <h2 class="text-2xl font-bold text-center mb-6">Discover & Play Your Favorite Tracks</h2>
+          <div class="flex justify-center mb-6">
+            <input
+              id="searchInput"
+              type="text"
+              placeholder="Search for a song..."
+              class="w-full md:w-2/3 p-2 border rounded"
+            />
+            <button
+              id="searchButton"
+              class="ml-4 bg-[var(--primary-color)] text-white px-4 py-2 rounded hover:bg-orange-600"
+            >
+              Search
+            </button>
+          </div>
+          <div id="trackList" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Tracks will be dynamically added here -->
+          </div>
+        </main>
+
+        <!-- Footer with Audio Player -->
+        <footer class="fixed bottom-0 w-full bg-[var(--primary-color)] text-white p-4">
+          <div class="container mx-auto flex justify-between items-center">
+            <audio id="audioPlayer" class="w-full hidden"></audio>
+            <div class="space-x-4">
+              <!-- Audio controls or other content can be here -->
+              <div class="text-right text-sm">
+                <p>© 2024 <span class="font-semibold">My Music App</span>. All Rights Reserved.</p>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
     </div>
 
-    <!-- Main Content Area -->
-    <div class="w-full flex flex-col">
-      <!-- Navbar -->
-      <nav class="bg-[var(--primary-color)] text-white p-4 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center">
-          <h1 class="text-xl font-bold">🎵 My Music App</h1>
-        </div>
-      </nav>
-
-      <!-- Main Section -->
-      <main class="container mx-auto py-8">
-        <h2 class="text-2xl font-bold text-center mb-6">Discover & Play Your Favorite Tracks</h2>
-        <div class="flex justify-center mb-6">
-          <input
-            id="searchInput"
-            type="text"
-            placeholder="Search for a song..."
-            class="w-full md:w-2/3 p-2 border rounded"
-          />
-          <button
-            id="searchButton"
-            class="ml-4 bg-[var(--primary-color)] text-white px-4 py-2 rounded hover:bg-orange-600"
-          >
-            Search
-          </button>
-        </div>
-        <div id="trackList" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <!-- Tracks will be dynamically added here -->
-        </div>
-      </main>
-
-      <!-- Player -->
-      <footer class="fixed bottom-0 w-full bg-[var(--primary-color)] text-white p-4">
-        <div class="container mx-auto grid grid-cols-2 gap-4 items-start">
-          <!-- First Column: Copyright Section (Row-Wise) -->
-          <div class="text-sm">
-            <p>© 2024 <span class="font-semibold">My Music App</span>. All Rights Reserved.</p>
-          </div>
-      
-          <!-- Second Column: Links/Information -->
-          <div class="flex gap-x-20">
-            <a href="./auth.html" class="hover:underline">Home</a>
-            <a href="./index.html#about" class="hover:underline">About Us</a>
-            <a href="./index.html#services" class="hover:underline">Services</a>
-          </div>
-        </div>
-      </footer>
-      
-      
-      
-      
-      
-    </div>
-  </div>
-
-  <script src="./managers/sidebar.manager.js"></script>
-  <script src="music.js" type="module"></script>
-</body>
-
+    <script src="./managers/sidebar.manager.js"></script>
+    <script src="music.js" type="module"></script>
+  </body>
 </html>
