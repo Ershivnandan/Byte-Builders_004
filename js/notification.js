@@ -12,9 +12,10 @@ let currentUserData;
 
 export async function fetchNotifications() {
   currentUserData = await getUserProfile();
+  let userIdOfUser = currentUserData.userId || currentUserData.uid;
   const notificationsRef = ref(
     database,
-    `notifications/${currentUserData.userId}`
+    `notifications/${userIdOfUser}`
   );
   const snapshot = await get(notificationsRef);
 
@@ -40,6 +41,8 @@ export async function sendNotification(reciverId, messageObj) {
       notificationId,
       timestamp: new Date().toISOString(),
     });
+
+    console.log("send", messageObj)
 
   } catch (error) {
     console.log(error.message);

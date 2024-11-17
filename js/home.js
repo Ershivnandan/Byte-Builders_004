@@ -217,6 +217,7 @@ createTeamForm.addEventListener("submit", async (e) => {
     const newTeamRef = push(ref(database, "teams"));
     const teamId = newTeamRef.key;
     await set(newTeamRef, { ...teamRef, teamId });
+    console.log("cdscscs")
 
     sendInvitations(participant, teamName, teamId, creatorId);
     let userData = {
@@ -232,6 +233,7 @@ createTeamForm.addEventListener("submit", async (e) => {
 });
 
 async function sendInvitations(participants, teamName, teamId, creatorId) {
+
   for (let userId of participants) {
     const userRef = ref(database, `users/${userId}`);
     const userSnapshot = await get(userRef);
@@ -389,6 +391,9 @@ async function checkIfTeamExists() {
 async function displayTeamIcon(team) {
   const teamIconContainer = document.getElementById("teamIconContainer");
 
+  const teamRef = ref(database, `teams/${team.teamId}`);
+  const teamData = await get(teamRef);
+  console.log(teamData.val())
   // Create the main team icon element
   const teamIcon = document.createElement("div");
   teamIcon.className = "relative flex items-center cursor-pointer ";
@@ -544,9 +549,6 @@ document.querySelectorAll("#dropdown ul li a").forEach((item) => {
     dropdownMenu.classList.add("hidden");
   });
 });
-
-
-
 
 
 checkIfTeamExists();

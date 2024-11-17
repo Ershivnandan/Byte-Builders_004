@@ -15,16 +15,11 @@ import {
   child,
   remove,
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { sendNotification } from "./notification.js";
 
 export const deleteTeamByTeamIdAndCreatorId = async (teamId, creatorId) => {
   try {
     const teamRef = ref(database, `teams/${teamId}`);
-    let userProfile = getUserProfile();
-
-    console.log(userProfile);
-
-    saveUserProfileToDatabase()
-
     const snapshot = await get(teamRef);
 
     if (!snapshot.exists()) {
@@ -33,9 +28,34 @@ export const deleteTeamByTeamIdAndCreatorId = async (teamId, creatorId) => {
     }
 
     const team = snapshot.val();
+
     if (team.creatorId === creatorId) {
       await remove(teamRef);
       console.log(`Team with ID ${teamId} deleted successfully.`);
+
+      // Fetch participants array from the team
+      const participants = team.participants || [];
+
+      // Iterate over all participants and remove the teamId from their profiles
+      await Promise.all(
+        participants.map(async (participantId) => {
+          const userRef = ref(database, `users/${participantId}`);
+          const userSnapshot = await get(userRef);
+
+          if (userSnapshot.exists()) {
+            const userData = userSnapshot.val();
+            const updatedTeams = (userData.teams || []).filter(
+              (id) => id !== teamId
+            );
+
+            // Update the user's node
+            await update(userRef, { ...userData, teams: updatedTeams });
+            console.log(`Removed team ID ${teamId} from user ${participantId}`);
+          } else {
+            console.log(`User with ID ${participantId} not found.`);
+          }
+        })
+      );
     } else {
       console.log("Creator ID does not match. Cannot delete the team.");
     }
@@ -45,40 +65,57 @@ export const deleteTeamByTeamIdAndCreatorId = async (teamId, creatorId) => {
 };
 
 export async function joinTeam(teamId) {
-  const user = auth.currentUser;
-  const userId = user ? user.uid : null;
-  const userdata = await getUserProfile();
-  const userid = userdata.userId;
-
-  if (userId && userid) {
-    const teamRef = ref(database, `teams/${teamId}/participants`);
-
+    
+    const userdata = await getUserProfile();
+    const userid = userdata.userId || userdata.uid;
+    if (!userid) {
+      console.error("User not authenticated.");
+      return;
+    }
+  
     try {
-      const snapshot = await get(teamRef);
-      let participants = snapshot.exists() ? snapshot.val() : {};
 
-      const nextIndex = Object.keys(participants).length;
+      if (!userid) {
+        console.error("User profile not found.");
+        return;
+      }
 
+      const teamRef = ref(database, `teams/${teamId}/participants`);
+      const userRef = ref(database, `users/${userid}`);
+  
+      const teamSnapshot = await get(teamRef);
+      let participants = teamSnapshot.exists() ? teamSnapshot.val() : {};
+  
       const isAlreadyAdded = Object.values(participants).includes(userid);
       if (isAlreadyAdded) {
         alert("You are already part of this team.");
         return;
       }
-
+  
+      const nextIndex = Object.keys(participants).length;
       await update(teamRef, {
         [nextIndex]: userid,
       });
+  
 
-      alert("Joined the team successfully!");
-      checkIfTeamExists();
+      const userSnapshot = await get(userRef);
+      if (userSnapshot.exists()) {
+        const userData = userSnapshot.val();
+
+        await update(userRef, { ...userData, teamId: teamId });
+      } else {
+
+        await update(userRef, { teamId: teamId });
+      }
+      console.log("Joined successfully");
+      
+
     } catch (error) {
       console.error("Error joining team: ", error);
       alert("Failed to join the team. Please try again later.");
     }
-  } else {
-    alert("Please login to join a team.");
   }
-}
+  
 
 export function getTasksByUser() {
   return new Promise((resolve, reject) => {

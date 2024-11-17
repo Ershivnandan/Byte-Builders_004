@@ -13,6 +13,7 @@ class subnavManager extends HTMLElement {
     console.log(userProfile)
     const userName = userProfile.displayName || userProfile.name || "Guest";
     const notifications = await fetchNotifications();
+    console.log(notifications)
     let notificationCount =
       notifications.length > 9 ? "9+" : notifications.length || 0;
 
@@ -117,6 +118,7 @@ class subnavManager extends HTMLElement {
       document.getElementById("deleteMyTeam").addEventListener("click", async ()=>{
         console.log(userProfile)
           let userid = userProfile.userId || userProfile.uid;
+          console.log(userProfile)
         await deleteTeamByTeamIdAndCreatorId(userProfile.teamId, userid);
       });
     }
@@ -196,14 +198,14 @@ class subnavManager extends HTMLElement {
 
               const message = {
                 message: `${userName} has accepted your team invitation`,
-                senderId: userProfile.userId,
+                senderId: userProfile.userId || userProfile.uid,
                 senderImage: userImage,
               };
 
               await sendNotification(notification.senderId, message);
 
               await removeNotification(
-                userProfile.userId,
+                userProfile.userId || userProfile.uid,
                 notification.notificationId
               );
             });
@@ -212,14 +214,14 @@ class subnavManager extends HTMLElement {
             .addEventListener("click", async () => {
               const message = {
                 message: `${userName} has rejected your team invitation`,
-                senderId: userProfile.userId,
+                senderId: userProfile.userId || userProfile.uid,
                 senderImage: userImage,
               };
 
               await sendNotification(notification.senderId, message);
 
               await removeNotification(
-                userProfile.userId,
+                userProfile.userId || userProfile.uid,
                 notification.notificationId
               );
             });
@@ -229,7 +231,7 @@ class subnavManager extends HTMLElement {
           .getElementById(removeNotifi)
           .addEventListener("click", async () => {
             await removeNotification(
-              userProfile.userId,
+              userProfile.userId || userProfile.uid,
               notification.notificationId
             );
           });

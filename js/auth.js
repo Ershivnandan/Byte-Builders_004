@@ -24,6 +24,7 @@ export function isTokenExpired(token) {
 
   return now > expiry;
 }
+
 export let currentUserData;
 
 const idToken = localStorage.getItem("idToken");
