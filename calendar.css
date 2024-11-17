@@ -8,3 +8,8 @@
   --tw-bg-opacity: 1;
   background-color: #9d3503 !important;
 }
+
+.bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(92 127 135) !important;
+}
