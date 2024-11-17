@@ -1,4 +1,9 @@
-import { checkLoggedin, currentUserData, getUserProfile, saveUserProfileToDatabase } from "./auth.js";
+import {
+  checkLoggedin,
+  currentUserData,
+  getUserProfile,
+  saveUserProfileToDatabase,
+} from "./auth.js";
 import { auth, database } from "./firebase.config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import {
@@ -8,7 +13,7 @@ import {
   push,
   update,
   child,
-  remove
+  remove,
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 export const deleteTeamByTeamIdAndCreatorId = async (teamId, creatorId) => {
@@ -71,42 +76,68 @@ export async function joinTeam(teamId) {
   }
 }
 
-
 export function getTasksByUser() {
-    return new Promise((resolve, reject) => {
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          const userId = user.uid;
-          const tasksRef = ref(database, "tasks");
-          try {
-            const snapshot = await get(tasksRef);
-            if (snapshot.exists()) {
-              const tasks = snapshot.val();
-              const userTasks = Object.entries(tasks)
-                .filter(([taskId, task]) => task.userId === userId)
-                .map(([taskId, task]) => ({ taskId, ...task }));
-              resolve(userTasks); 
-            } else {
-              const taskGrid = document.getElementById("taskGrid");
-              taskGrid.innerHTML = `
+  return new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userId = user.uid;
+        const tasksRef = ref(database, "tasks");
+        try {
+          const snapshot = await get(tasksRef);
+          if (snapshot.exists()) {
+            const tasks = snapshot.val();
+            const userTasks = Object.entries(tasks)
+              .filter(([taskId, task]) => task.userId === userId)
+              .map(([taskId, task]) => ({ taskId, ...task }));
+            resolve(userTasks);
+          } else {
+            const taskGrid = document.getElementById("taskGrid");
+            taskGrid.innerHTML = `
                 <div class="flex justify-center items-center text-center font-bold text-3xl">
                   <p>
                     You have no task yet!
                   </p>
                 </div>
               `;
-              console.log("No tasks found for the user.");
-              resolve([]); 
-            }
-          } catch (error) {
-            console.error("Error fetching tasks:", error);
-            reject(error); 
+            console.log("No tasks found for the user.");
+            resolve([]);
           }
-        } else {
-          console.log("User not logged in.");
-          resolve([]); 
+        } catch (error) {
+          console.error("Error fetching tasks:", error);
+          reject(error);
         }
-      });
+      } else {
+        console.log("User not logged in.");
+        resolve([]);
+      }
     });
-  }
-  
+  });
+}
+
+export function fetchTaskGoals(taskId) {
+  const goalsRef = ref(database, `goals`);
+
+  return get(goalsRef)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        const goals = snapshot.val();
+
+        const filteredGoals = Object.entries(goals)
+          .filter(([goalId, goal]) => {
+            return goal.taskId === taskId;
+          })
+          .map(([goalId, goal]) => ({ goalId, ...goal }));
+        if (filteredGoals.length > 0) {
+          return filteredGoals;
+        } else {
+          return [];
+        }
+      } else {
+        return [];
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching goals:", error);
+      return [];
+    });
+}

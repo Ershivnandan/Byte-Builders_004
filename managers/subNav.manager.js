@@ -22,6 +22,7 @@ class subnavManager extends HTMLElement {
       { name: "Music", url: "music.html" },
       { name: "Analytics", url: "analytics.html" },
       { name: "Task Goals", url: "taskdetail.html" },
+      { name: "Progress Chart", url: "analyticsdetail.html" },
     ];
 
     const currentPage = window.location.href;

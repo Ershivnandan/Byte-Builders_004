@@ -121,9 +121,9 @@ function displayTasks(userTasks) {
   taskGrid.innerHTML = "";
 
   userTasks.forEach((task, index) => {
-    if (task.isArchive) {
-      return;
-    }
+    // if (task.isArchive) {
+    //   return;
+    // }
     const card = document.createElement("div");
     card.className = `flex flex-col justify-between border rounded-lg p-4 text-white ${
       bgColors[Math.floor(Math.random() * bgColors.length)]

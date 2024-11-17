@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytic Detail</title>
+    <link rel="shortcut icon" href="./logo.png" type="image/*" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./Global.css" />
+    <script
+      src="https://kit.fontawesome.com/49b1f13654.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body class="h-screen bg-gray-100">
+    <div class="flex">
+      <!-- Sidebar -->
+      <div class="md:w-1/4 lg:relative sm:absolute w-0">
+        <side-bar class=""></side-bar>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="w-full">
+        <!-- Navbar -->
+        <div class="w-full bg-blue-500 text-white">
+          <sub-nav></sub-nav>
+        </div>
+
+        <!-- Main Content below Navbar -->
+        <div
+          class="py-4 px-4 flex justify-center items-center"
+          style="
+            background: linear-gradient(
+              180deg,
+              rgba(238, 122, 5, 0.978) 0%,
+              rgba(255, 255, 255, 1) 81%
+            );
+          "
+        >
+          <div class="w-4/5">
+            <canvas id="myChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Script files -->
+    <script src="./managers/sidebar.manager.js"></script>
+    <script type="module" src="./managers/subNav.manager.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="./js/analyticsdetail.js"></script>
+    <script src="./Theme.js"></script>
+  </body>
+</html>
