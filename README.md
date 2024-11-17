@@ -117,6 +117,11 @@ This project offers tools to streamline productivity and organization, addressin
 - Hands-on experience with **responsive design** techniques.
 - Improved teamwork, collaboration, and version control using GitHub.
 
+Home Page
+![image](https://github.com/user-attachments/assets/5c8671c1-bfb4-4e47-8670-2e6b16026f57)
+
+
+
 ---
 
 ## Future Scope
