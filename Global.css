@@ -1,146 +1,82 @@
 /* Custom Colors for Light and Dark Themes */
 :root {
-  --primary-color-light: #1a202c;
-  --primary-color-light: #e1f4ff;
-  --primary-color-light: #005261;
-  --secondary-color-light: #4a5568;
-  --accent-color-light: #3182ce;
-  --background-color-light: #edf2f7;
-  --text-color-light: #2d3748;
-  --primary-color-dark: #2d3748;
-  --secondary-color-dark: #a0aec0;
-  --accent-color-dark: #e53e3e;
-  --background-color-dark: #03363f;
-  --text-color-dark: #f7fafc;
+
+  --primary-color-light: #1a202c; /* c Dark Blue */
+ --primary-color-light: #e1f4ff; 
+ --primary-color-light: #1b2029; /* Dark Blue */
+ --secondary-color-light: #4a5568; /* Grayish Blue */
+ --accent-color-light: #3182ce; /* Bright Blue */
+--background-color-light: #edf2f7;  /* Light Background */
+ --text-color-light: #2d3748; /* Dark Text Color */
+
+ --primary-color-dark: #2d3748; /* Light Blue */
+ --secondary-color-dark: #a0aec0; /* Light Gray */
+ --accent-color-dark: #e53e3e; /* Red */
+ --background-color-dark: #1b2029; /* Dark Background */
+ --text-color-dark: #f7fafc; /* Light Text Color */
 }
 
-.bg-orange-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(165 47 0 / 98%) !important;
-}
-
-element.style {
-  background: linear-gradient(180deg, rgb(165 47 0 / 98%) 0%, rgba(255, 255, 255, 1) 81%) !important;
-}
-.bg-gray-900 {
-  --tw-bg-opacity: 1;
-  /* background-color: #03363f !important; */
-  background-color: #9d3503 !important;
-}
-.to-green-300 {
-  --tw-gradient-to: #2c7546 var(--tw-gradient-to-position) !important;
-}
-.to-blue-900 {
-  --tw-gradient-to: #3f056b var(--tw-gradient-to-position) !important;
-}
-
-.from-teal-500 {
-  --tw-gradient-from: #18655c var(--tw-gradient-from-position) !important;
-}
-.from-green-500 {
-  --tw-gradient-from: #043315 var(--tw-gradient-from-position) !important;
-
-}
-
-h5 {
-  text-align: center !important;
-}
-*, ::after, ::before {
-  border-color: #bfbfbf !important;
-}
-
-.from-green-200 {
-  --tw-gradient-from: #000000 var(--tw-gradient-from-position) !important;
-}
-
-.to-blue-400 {
-  --tw-gradient-to: #0855b3 var(--tw-gradient-to-position) !important;
-}
-.bg-gray-100 {
-  --tw-bg-opacity: 0.7;
-  background-color: #ffdfd2 !important;
-}
-.to-green-300 {
-  --tw-gradient-to: #fffdc6 var(--tw-gradient-to-position) !important;
-}
-.from-green-400 {
-  --tw-gradient-from: #005720 var(--tw-gradient-from-position) !important;
-
-}
-.from-cyan-400 {
-  --tw-gradient-from: #ff9065 var(--tw-gradient-from-position) !important;
-
-}
-.to-blue-600 {
-  --tw-gradient-to: #0034a5 var(--tw-gradient-to-position) !important;
-}
 /* Apply light theme by default */
-.to-yellow-300 {
-  --tw-gradient-to: #9b4d00 var(--tw-gradient-to-position) !important;
-}
+
 .hideNotifi{
-  display: none !important;
+ display: none !important;
 }
 
 body {
-  background-color: var(--background-color-light);
-  color: var(--text-color-light);
+ background-color: var(--background-color-light);
+ color: var(--text-color-light);
 }
 
 header {
-  background-color: var(--primary-color-light);
-  color: white;
+ background-color: var(--primary-color-light);
+ color: white;
 }
 
 footer {
-  background-color: var(--secondary-color-light);
-  color: white;
+ background-color: var(--secondary-color-light);
+ color: white;
 }
 
 button {
-  background-color: var(--accent-color-light);
-  color: white;
+ background-color: var(--accent-color-light);
+ color: white;
 }
 .dropdown{
-  background-color: var(--primary-color-dark);
-  color: white;
-  
+ background-color: var(--primary-color-dark);
+ color: white;
+ 
 }
 
 .custom-border{
-  border: 1px solid #2d3748 !important;
+ border: 1px solid #2d3748 !important;
 }
 
 /* Dark Theme Style */
 .dark-mode {
-  background-color: var(--background-color-dark);
-  /* color: var(--text-color-dark); */
+ background-color: var(--background-color-dark);
+ /* color: var(--text-color-dark); */
 }
 
 .dark-mode header {
-  background-color: var(--primary-color-dark);
+ background-color: var(--primary-color-dark);
 }
 
 .dark-mode footer {
-  background-color: var(--secondary-color-dark);
+ background-color: var(--secondary-color-dark);
 }
 
 .dark-mode button {
-  background-color: var(--accent-color-dark);
+ background-color: var(--accent-color-dark);
 }
 
 
 .dark-mode .dropdown{
-  background-color: var(--primary-color-dark);
-  color: white;
-  background-color: var(--primary-color-light);
-  color: white;
+ background-color: var(--primary-color-dark);
+ color: white;
+ background-color: var(--primary-color-light);
+ color: white;
 }
 
 .dark-mode .custom-border{
-  border: 1px solid white !important;
-}
-
-.py-8 {
-  padding: 1.5rem 2rem !important;
+ border: 1px solid white !important;
 }

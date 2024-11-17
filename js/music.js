@@ -3,6 +3,7 @@ import { checkLoggedin } from "./auth.js";
 const clientId = "2afb0602e5174cf3bcd145c2c993b6f2";
 const clientSecret = "49fb608670d1451b92e7b12b8b707075";
 
+// Fetch token to authenticate with Spotify API
 async function getToken() {
   try {
     const response = await fetch("https://accounts.spotify.com/api/token", {
@@ -23,6 +24,7 @@ async function getToken() {
   }
 }
 
+// Search for songs based on a query
 async function searchSong(query) {
   const token = await getToken();
   if (!token) return [];
@@ -45,6 +47,7 @@ async function searchSong(query) {
   }
 }
 
+// Display songs on the page
 async function searchAndDisplaySongs(query) {
   const trackList = document.getElementById("trackList");
   trackList.innerHTML = "<p>Loading...</p>";
@@ -82,7 +85,7 @@ async function searchAndDisplaySongs(query) {
   });
 }
 
-
+// Play song preview
 function playSong(song) {
   if (!song.preview_url) {
     alert("No preview available for this song!");
@@ -105,12 +108,12 @@ function playSong(song) {
     });
 }
 
-
+// Random calm songs query
 function loadRandomCalmSongs() {
-  searchAndDisplaySongs("calm focus"); 
+  searchAndDisplaySongs("calm focus"); // Using "calm focus" as the query to fetch relaxing/focus music
 }
 
-
+// Event listeners for play/pause functionality
 let isPlaying = false;
 let audioPlayer = document.getElementById("audioPlayer");
 let playPauseButton = document.getElementById("playPauseButton");
@@ -133,29 +136,29 @@ playPauseButton.addEventListener("click", () => {
   }
 });
 
-
+// Update the timeline while song is playing
 audioPlayer.addEventListener("timeupdate", () => {
   const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
   timeline.value = progress;
 });
 
-
+// Allow user to adjust the timeline
 timeline.addEventListener("input", () => {
   const seekTo = (timeline.value / 100) * audioPlayer.duration;
   audioPlayer.currentTime = seekTo;
 });
 
-
+// Adjust volume
 volumeControl.addEventListener("input", () => {
   audioPlayer.volume = volumeControl.value / 100;
 });
 
-
+// Debounced search input
 function debounce(func, delay) {
   let timeout;
   return function (...args) {
-    clearTimeout(timeout); 
-    timeout = setTimeout(() => func.apply(this, args), delay); 
+    clearTimeout(timeout); // Clear the previous timeout if there is any
+    timeout = setTimeout(() => func.apply(this, args), delay); // Set a new timeout
   };
 }
 
@@ -179,6 +182,5 @@ searchInput.addEventListener(
   }, 500)
 );
 
-
-window.addEventListener("load", loadRandomCalmSongs);
 checkLoggedin();
+window.addEventListener("load", loadRandomCalmSongs);
