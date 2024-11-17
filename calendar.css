@@ -3,3 +3,8 @@
 .max-w-md {
   max-width: 80rem !important;
 }
+
+.bg-gray-900 {
+  --tw-bg-opacity: 1;
+  background-color: #9d3503 !important;
+}
