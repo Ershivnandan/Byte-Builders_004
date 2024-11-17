@@ -108,7 +108,6 @@ export async function registerUser(userData) {
 
     const token = await user.getIdToken();
 
-    console.log(user, "thiscsd");
     const userProfile = {
       uid: user.uid,
       email: user.email,
@@ -132,7 +131,7 @@ export async function registerUser(userData) {
 
 export async function saveUserProfileToDatabase(profile) {
 
-  await set(ref(database, `users/${currentUserData.userId}`), profile);
+  await set(ref(database, `users/${profile.uid}`), profile);
 }
 
 export function getUserProfile() {
