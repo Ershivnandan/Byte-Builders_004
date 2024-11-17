@@ -6,45 +6,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="calendar.css">
+    <script src="https://kit.fontawesome.com/49b1f13654.js" crossorigin="anonymous"></script>
   </head>
-  <body class="h-screen bg-gradient-to-b from-orange-500 to-white flex items-center justify-center font-sans">
-    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-      <div class="flex justify-between items-center mb-4">
-        <!-- Prev Month Button -->
-        <button class="btn prev-month month-btn bg-gray-200 hover:bg-orange-100 px-3 py-1 rounded text-gray-600">
-          <i class="fas fa-chevron-left"></i> Prev Month
-        </button>
-        <div class="current-month font-bold text-lg"></div>
-        <!-- Next Month Button -->
-        <button class="btn next-month month-btn bg-gray-200 hover:bg-orange-100 px-3 py-1 rounded text-gray-600">
-          Next Month <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
-      <div class="grid grid-cols-7 text-center text-sm font-semibold text-gray-600 mb-2">
-        <div>Sun</div>
-        <div>Mon</div>
-        <div>Tue</div>
-        <div>Wed</div>
-        <div>Thu</div>
-        <div>Fri</div>
-        <div>Sat</div>
-      </div>
-      <div class="calendar-days grid grid-cols-7 gap-1"></div>
-      <div class="flex justify-between mt-4">
-        <!-- Prev Year Button -->
-        <button class="btn prev-year bg-gray-200 hover:bg-orange-100 px-3 py-1 rounded text-gray-600">
-          Prev Year
-        </button>
-        <!-- Today Button -->
-        <button class="btn today bg-gray-200 hover:bg-orange-100 px-3 py-1 rounded text-gray-600">
-          Today
-        </button>
-        <!-- Next Year Button -->
-        <button class="btn next-year bg-gray-200 hover:bg-orange-100 px-3 py-1 rounded text-gray-600">
-          Next Year
-        </button>
+  <body class="h-screen bg-gradient-to-b from-orange-500 to-white flex font-sans">
+    <!-- Sidebar -->
+    <div class="md:w-1/4 lg:relative sm:absolute w-0">
+      <side-bar></side-bar>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-grow flex items-center justify-center">
+      <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+        <div class="flex justify-between items-center mb-4">
+          <!-- Prev Month Button -->
+          <button class="btn prev-month month-btn bg-gray-200 hover:bg-orange-100 px-3 py-1 rounded text-gray-600">
+            <i class="fas fa-chevron-left"></i> Prev Month
+          </button>
+          <div class="current-month font-bold text-lg"></div>
+          <!-- Next Month Button -->
+          <button class="btn next-month month-btn bg-gray-200 hover:bg-orange-100 px-3 py-1 rounded text-gray-600">
+            Next Month <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+        <div class="grid grid-cols-7 text-center text-sm font-semibold text-gray-600 mb-2">
+          <div>Sun</div>
+          <div>Mon</div>
+          <div>Tue</div>
+          <div>Wed</div>
+          <div>Thu</div>
+          <div>Fri</div>
+          <div>Sat</div>
+        </div>
+        <div class="calendar-days grid grid-cols-7 gap-1"></div>
+        <div class="flex justify-between mt-4">
+          <!-- Prev Year Button -->
+          <button class="btn prev-year bg-gray-200 hover:bg-orange-100 px-3 py-1 rounded text-gray-600">
+            <i class="fas fa-chevron-left"></i> Prev Year
+          </button>
+          <!-- Today Button -->
+          <button class="btn today bg-gray-200 hover:bg-orange-100 px-3 py-1 rounded text-gray-600">
+            Today 
+          </button>
+          <!-- Next Year Button -->
+          <button class="btn next-year bg-gray-200 hover:bg-orange-100 px-3 py-1 rounded text-gray-600">
+            Next Year <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
       </div>
     </div>
+
+    <!-- Script files -->
+    <script src="./managers/sidebar.manager.js"></script>
     <script src="./calendar.js"></script>
   </body>
 </html>
