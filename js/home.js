@@ -64,7 +64,7 @@ createTeamBtn.addEventListener("click", () => {
 async function setHomeUserName() {
   try {
     const profile = await getUserProfile();
-    homeUserName.textContent = profile.displayName;
+    homeUserName.textContent = profile.displayName  || profile.name;
   } catch (error) {
     console.error("Error setting user name:", error);
     homeUserName.textContent = "Guest";

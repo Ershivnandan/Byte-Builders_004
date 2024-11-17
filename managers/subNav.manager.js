@@ -10,7 +10,8 @@ class subnavManager extends HTMLElement {
   async connectedCallback() {
     const userProfile = await getUserProfile();
     const userImage = userProfile.photoURL;
-    const userName = userProfile.displayName || "GOAT";
+    console.log(userProfile)
+    const userName = userProfile.displayName || userProfile.name || "Guest";
     const notifications = await fetchNotifications();
     let notificationCount =
       notifications.length > 9 ? "9+" : notifications.length || 0;
@@ -114,7 +115,9 @@ class subnavManager extends HTMLElement {
 
     if(userProfile){
       document.getElementById("deleteMyTeam").addEventListener("click", async ()=>{
-        await deleteTeamByTeamIdAndCreatorId(userProfile.teamId, userProfile.userId);
+        console.log(userProfile)
+          let userid = userProfile.userId || userProfile.uid;
+        await deleteTeamByTeamIdAndCreatorId(userProfile.teamId, userid);
       });
     }
 

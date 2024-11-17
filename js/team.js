@@ -19,6 +19,11 @@ import {
 export const deleteTeamByTeamIdAndCreatorId = async (teamId, creatorId) => {
   try {
     const teamRef = ref(database, `teams/${teamId}`);
+    let userProfile = getUserProfile();
+
+    console.log(userProfile);
+
+    saveUserProfileToDatabase()
 
     const snapshot = await get(teamRef);
 
