@@ -1,28 +1,39 @@
 /* Custom Colors for Light and Dark Themes */
 :root {
-
-   --primary-color-light: #1a202c; /* c Dark Blue */
-  --primary-color-light: #e1f4ff; 
-  --primary-color-light: #1b2029; /* Dark Blue */
-  --secondary-color-light: #4a5568; /* Grayish Blue */
-  --accent-color-light: #3182ce; /* Bright Blue */
- --background-color-light: #edf2f7;  /* Light Background */
-  --text-color-light: #2d3748; /* Dark Text Color */
-
-  --primary-color-dark: #2d3748; /* Light Blue */
-  --secondary-color-dark: #a0aec0; /* Light Gray */
-  --accent-color-dark: #e53e3e; /* Red */
-  --background-color-dark: #1b2029; /* Dark Background */
-  --text-color-dark: #f7fafc; /* Light Text Color */
+  --primary-color-light: #1a202c;
+  --primary-color-light: #e1f4ff;
+  --primary-color-light: #005261;
+  --secondary-color-light: #4a5568;
+  --accent-color-light: #3182ce;
+  --background-color-light: #edf2f7;
+  --text-color-light: #2d3748;
+  --primary-color-dark: #2d3748;
+  --secondary-color-dark: #a0aec0;
+  --accent-color-dark: #e53e3e;
+  --background-color-dark: #03363f;
+  --text-color-dark: #f7fafc;
 }
 
+.bg-orange-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(165 47 0 / 98%) !important;
+}
+
+element.style {
+  background: linear-gradient(180deg, rgb(165 47 0 / 98%) 0%, rgba(255, 255, 255, 1) 81%) !important;
+}
+.bg-gray-900 {
+  --tw-bg-opacity: 1;
+  /* background-color: #03363f !important; */
+  background-color: #9d3503 !important;
+}
 .to-green-300 {
   --tw-gradient-to: #2c7546 var(--tw-gradient-to-position) !important;
 }
 .to-blue-900 {
   --tw-gradient-to: #3f056b var(--tw-gradient-to-position) !important;
 }
-<style>
+
 .from-teal-500 {
   --tw-gradient-from: #18655c var(--tw-gradient-from-position) !important;
 }
