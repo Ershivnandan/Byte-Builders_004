@@ -9,7 +9,6 @@ let date = new Date();
 const currentMonth = document.querySelector(".current-month");
 const calendarDays = document.querySelector(".calendar-days");
 
-
 currentMonth.textContent = date.toLocaleDateString("en-US", {
   month: "long",
   year: "numeric",
@@ -22,7 +21,6 @@ async function getTaskData() {
   tasks.forEach((task) => {
     const start = new Date(task.startDate);
     const end = new Date(task.endDate);
-
 
     const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
     const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
@@ -82,7 +80,7 @@ function renderCalendar() {
                       )
                       .join("")}
                   </div>
-                  `
+                  ` 
               : ""
           }
         </div>`;
@@ -116,6 +114,34 @@ document.querySelectorAll(".month-btn").forEach((btn) => {
 
     renderCalendar();
   });
+});
+
+// Add event listeners for Today, Next Year, and Previous Year buttons
+document.querySelector(".prev-year").addEventListener("click", () => {
+  date.setFullYear(date.getFullYear() - 1);
+  currentMonth.textContent = date.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+  renderCalendar();
+});
+
+document.querySelector(".next-year").addEventListener("click", () => {
+  date.setFullYear(date.getFullYear() + 1);
+  currentMonth.textContent = date.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+  renderCalendar();
+});
+
+document.querySelector(".today").addEventListener("click", () => {
+  date = new Date(); // Set date to today
+  currentMonth.textContent = date.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+  renderCalendar();
 });
 
 checkLoggedin();
