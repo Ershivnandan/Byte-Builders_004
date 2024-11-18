@@ -100,8 +100,8 @@ function playSong(song) {
       currentTrack.textContent = `Playing: ${song.name} by ${song.artists[0].name}`;
       audioPlayer.hidden = false;
       isPlaying = true;
-      playIcon.classList.remove("fa-play");
       playIcon.classList.add("fa-pause");
+      playIcon.classList.remove("fa-play");
     })
     .catch((error) => {
       console.error("Error playing audio:", error.message);
