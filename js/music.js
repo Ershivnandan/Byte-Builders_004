@@ -3,6 +3,14 @@ import { checkLoggedin } from "./auth.js";
 const clientId = "2afb0602e5174cf3bcd145c2c993b6f2";
 const clientSecret = "49fb608670d1451b92e7b12b8b707075";
 
+// Event listeners for play/pause functionality
+let isPlaying = false;
+let audioPlayer = document.getElementById("audioPlayer");
+let playPauseButton = document.getElementById("playPauseButton");
+let playIcon = document.getElementById("playIcon");
+let timeline = document.getElementById("timeline");
+let volumeControl = document.getElementById("volumeControl");
+
 // Fetch token to authenticate with Spotify API
 async function getToken() {
   try {
@@ -97,7 +105,6 @@ function playSong(song) {
   audioPlayer
     .play()
     .then(() => {
-      currentTrack.textContent = `Playing: ${song.name} by ${song.artists[0].name}`;
       audioPlayer.hidden = false;
       isPlaying = true;
       playIcon.classList.add("fa-pause");
@@ -113,14 +120,7 @@ function loadRandomCalmSongs() {
   searchAndDisplaySongs("calm focus"); 
 }
 
-// Event listeners for play/pause functionality
-let isPlaying = false;
-let audioPlayer = document.getElementById("audioPlayer");
-let playPauseButton = document.getElementById("playPauseButton");
-let playIcon = document.getElementById("playIcon");
-let timeline = document.getElementById("timeline");
-let volumeControl = document.getElementById("volumeControl");
-let currentTrack = document.getElementById("currentTrack");
+
 
 playPauseButton.addEventListener("click", () => {
   if (isPlaying) {
