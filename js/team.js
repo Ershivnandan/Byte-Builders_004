@@ -18,6 +18,7 @@ import {
 import { sendNotification } from "./notification.js";
 
 export const deleteTeamByTeamIdAndCreatorId = async (teamId, creatorId) => {
+
   try {
     const teamRef = ref(database, `teams/${teamId}`);
     const snapshot = await get(teamRef);
@@ -33,10 +34,10 @@ export const deleteTeamByTeamIdAndCreatorId = async (teamId, creatorId) => {
       await remove(teamRef);
       console.log(`Team with ID ${teamId} deleted successfully.`);
 
-      // Fetch participants array from the team
+
       const participants = team.participants || [];
 
-      // Iterate over all participants and remove the teamId from their profiles
+
       await Promise.all(
         participants.map(async (participantId) => {
           const userRef = ref(database, `users/${participantId}`);

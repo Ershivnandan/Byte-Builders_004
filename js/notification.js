@@ -42,7 +42,7 @@ export async function sendNotification(reciverId, messageObj) {
       timestamp: new Date().toISOString(),
     });
 
-    console.log("send", messageObj)
+    console.log("notification Send")
 
   } catch (error) {
     console.log(error.message);

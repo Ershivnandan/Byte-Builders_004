@@ -380,6 +380,7 @@ async function checkIfTeamExists() {
 
           if (userTeam) {
             createTeamBtn.classList.add("hidden");
+            console.log(userTeam)
             displayTeamIcon(userTeam);
           }
         }
