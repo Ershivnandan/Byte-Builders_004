@@ -94,7 +94,7 @@ function renderCalendar() {
   document.querySelectorAll(".task-item").forEach((taskItem) => {
     taskItem.addEventListener("click", (e) => {
       const taskId = e.currentTarget.dataset.id;
-      window.location.href = `taskDetail.html?taskId=${taskId}`;
+      window.location.href = `/taskDetail.html?taskId=${taskId}`;
     });
   });
 }
