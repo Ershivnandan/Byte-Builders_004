@@ -10,6 +10,8 @@
     <!-- bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="./Global.css" />
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.5/dist/cdn.min.js" defer></script>
+
   </head>
 
     <!-- Navbar -->
@@ -17,51 +19,44 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <div class="flex items-center">
-            <a href="" ><img class="w-16" src="https://i.ibb.co/8g5F6gR/logo.jpg" alt="logo"></a>
+            <a href="">
+              <img class="w-16" src="https://i.ibb.co/8g5F6gR/logo.jpg" alt="logo" />
+            </a>
           </div>
-  
+    
           <!-- Hamburger and Links -->
-          <div class="flex items-center space-x-4 ">
+          <div class="flex items-center space-x-4">
             <!-- Desktop Links -->
             <div class="hidden md:flex space-x-8">
               <a href="#" class="text-gray-700 hover:text-gray-900">Home</a>
               <a href="#about" class="text-gray-700 hover:text-gray-900">About</a>
               <a href="#services" class="text-gray-700 hover:text-gray-900">Services</a>
-              <button class=""><a href="auth.html" class="text-gray-700 hover:text-gray-900">Sign Up</a></button>
-              <!-- <div class="mt-5"> -->
-                <!-- <label
-                  class=" mt-1 inline-flex items-center cursor-pointer text-white rounded"
-                >
-                  <input id="theme-toggle" type="checkbox" class="sr-only peer" />
-                  <div
-                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-                  ></div>
-                </label> -->
-              <!-- </div> -->
+              <button>
+                <a href="auth.html" class="text-gray-700 hover:text-gray-900">Sign Up</a>
+              </button>
             </div>
-  
+    
             <!-- Mobile Menu Button -->
-            <div class="md:hidden flex items-center">
+            <div x-data="{ open: false }" class="md:hidden flex items-center">
               <button @click="open = !open" class="text-gray-700 focus:outline-none" aria-label="Toggle menu">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                 </svg>
               </button>
+    
+              <!-- Mobile Menu Dropdown -->
+              <div x-show="open" @click.away="open = false" class="absolute top-16 left-0 right-0 bg-white shadow-lg rounded-md">
+                <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Home</a>
+                <a href="#about" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">About</a>
+                <a href="#services" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Services</a>
+                <a href="auth.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Sign Up</a>
+              </div>
             </div>
-          </div>
-        </div>
-  
-        <!-- Mobile Menu (only visible when open) -->
-        <div x-data="{ open: false }" x-show="open" @click.away="open = false" class="md:hidden">
-          <div class="pt-4 pb-3 space-y-1">
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Home</a>
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">About</a>
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Services</a>
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Contact</a>
           </div>
         </div>
       </div>
     </header>
+    
 
     <!-- Hero Section -->
     <section class="text-center py-16 bg-blue-50 pt-55">
